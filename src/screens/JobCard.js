@@ -2,20 +2,22 @@ import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Svg, Path, SvgProps } from 'react-native-svg';
 const JobCard = ({ job, onPress }) => {
+
+  // console.log(job);
+
   return (
     <View style={styles.card}>
-      {/* Top Section */}
       <View style={styles.topSection}>
         <View style={styles.iconContainer}>
           <Image
-            source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg' }}
+            source={{ uri: job.job.logo || 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg' }}
             style={styles.companyLogo}
           />
         </View>
         <View style={styles.titleContainer}>
-          <Text style={styles.jobTitle}>{job.title}</Text>
+          <Text style={styles.jobTitle}>{job.job.title}</Text>
           <Text style={styles.companyDetails}>
-            {job.company} • {job.location}
+            {job.job.company} • {job.job.location}
           </Text>
         </View>
         <TouchableOpacity style={styles.bookmark}>
@@ -23,27 +25,27 @@ const JobCard = ({ job, onPress }) => {
         </TouchableOpacity>
       </View>
 
-      {/* Salary */}
-      <Text style={styles.salary}>{job.salary}</Text>
+      <Text style={styles.salary}>{job.job.salary || 'Not Disclosed'}</Text>
 
-      {/* Tags */}
       <View style={styles.tagsContainer}>
-        <View style={styles.tag}>
-          <Text style={styles.tagText}>Full time</Text>
-        </View>
-        <View style={styles.tag}>
-          <Text style={styles.tagText}>Senior level</Text>
-        </View>
-        <View>
+      {job.job.jdata?.benefits?.length > 0 ? (
+            job.job.jdata.benefits.map((tag, index) => (
+              <View key={index} style={styles.tag}>
+                <Text style={styles.tagText}>{tag}</Text>
+              </View>
+            ))
+          ) : (
+            <Text style={styles.noBenefitsText}>No benefits available</Text>
+          )}
         <TouchableOpacity style={styles.applyButton} onPress={onPress}>
-        <Text style={styles.applyText}>Apply</Text>
-      </TouchableOpacity>
-        </View>
+          <Text style={styles.applyText}>Apply</Text>
+        </TouchableOpacity>
       </View>
-      
+      <Text style={styles.relativeTime}>{job.job.relative_created_at}</Text>
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   card: {

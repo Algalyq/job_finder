@@ -1,20 +1,30 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import Config from 'react-native-config';
 
-const HeaderConfig = ({ job }) => { // Accept job as a prop
+
+
+const HeaderConfig = ({ job }) => { 
+  const navigation = useNavigation();
+  console.log(job.logo)
   return (
     <View style={styles.header}>
-      <Image
-        source={{ uri: job.logo }}
-        style={styles.logo}
-      />
+      <View style={styles.back}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Icon name="arrow-back" size={24} color="#130160" />
+        </TouchableOpacity>
+      </View>
+      <Image source={{ uri: job.logo }}
+          style={styles.logo}/>
       <Text style={styles.title}>{job.title}</Text>
       <View style={styles.subtitle}>
         <Text style={styles.company}>{job.company}</Text>
         <Text style={styles.dot}>•</Text>
         <Text style={styles.location}>{job.location}</Text>
         <Text style={styles.dot}>•</Text>
-        <Text style={styles.time}>1 day ago</Text>
+        <Text style={styles.time}>{job.relative_created_at}</Text>
       </View>
     </View>
   );
@@ -58,6 +68,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#6D6D6D',
   },
+  back: {
+    position: 'absolute',
+    alignSelf: 'flex-start'
+  }
 });
 
 export default HeaderConfig;

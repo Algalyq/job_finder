@@ -3,61 +3,67 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, SafeAreaVi
 import Header from '../components/HeaderConfig';
 import { useNavigation } from '@react-navigation/native';
 
+
 const JobDetails = ({ route }) => {
   const { job } = route.params; // Assuming job details are passed via route
   const navigation = useNavigation();
   return (
     <SafeAreaView>
-    <ScrollView contentContainerStyle={styles.container}>
-      {/* Header Section */}
-      <Header job={job}/>
+      <ScrollView contentContainerStyle={styles.container}>
+        {/* Header Section */}
+        <Header job={job} />
 
-      {/* Job Description Section */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Job Description</Text>
-        <Text style={styles.description}>
-          {job.description.substring(0, 150)}...
-        </Text>
-        <TouchableOpacity>
-          <Text style={styles.readMore}>Read more</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Requirements Section */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Requirements</Text>
-        {job.requirements.map((req, index) => (
-          <Text key={index} style={styles.requirement}>
-            • {req}
-          </Text>
-        ))}
-      </View>
-
-      <View style={styles.section}>
-      <Text style={styles.sectionTitle}>Additional Information</Text>
-      {Object.entries(job.informations).map(([key, value], index) => (
-        <View key={index} style={styles.infoContainer}>
-          <Text style={styles.infoKey}>
-            • {key.charAt(0).toUpperCase() + key.slice(1)}:
-          </Text>
-          <Text style={styles.infoValue}>{value}</Text>
+        {/* Job Description Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Job Description</Text>
+          <Text style={styles.description}>{job.description || 'No description available'}</Text>
+          {job.description && (
+            <TouchableOpacity>
+              <Text style={styles.readMore}>Read more</Text>
+            </TouchableOpacity>
+          )}
         </View>
-      ))}
-    </View>
 
+        {/* Benefits Section */}
+        {job.jdata?.benefits?.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Benefits</Text>
+            {job.jdata.benefits.map((benefit, index) => (
+              <View key={index} style={styles.tag}>
+                <Text style={styles.tagText}>{benefit}</Text>
+              </View>
+            ))}
+          </View>
+        )}
 
-  
-      {/* Apply Button */}
-      <TouchableOpacity style={styles.applyButton}  
-      onPress={() => navigation.navigate('ApplyScreen',{job})}>
-        <Text style={styles.applyText}>APPLY NOW</Text>
-      </TouchableOpacity>
-    </ScrollView>
+        {/* Additional Information Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Additional Information</Text>
+          <View style={styles.infoContainer}>
+            <Text style={styles.infoKey}>Job Type:</Text>
+            <Text style={styles.infoValue}>{job.job_type || 'Not specified'}</Text>
+          </View>
+          <View style={styles.infoContainer}>
+            <Text style={styles.infoKey}>Salary:</Text>
+            <Text style={styles.infoValue}>${job.salary || 'Not specified'}</Text>
+          </View>
+          <View style={styles.infoContainer}>
+            <Text style={styles.infoKey}>Posted:</Text>
+            <Text style={styles.infoValue}>{job.relative_created_at || 'Unknown'}</Text>
+          </View>
+        </View>
 
+        {/* Apply Button */}
+        <TouchableOpacity
+          style={styles.applyButton}
+          onPress={() => navigation.navigate('ApplyScreen', { job })}
+        >
+          <Text style={styles.applyText}>APPLY NOW</Text>
+        </TouchableOpacity>
+      </ScrollView>
     </SafeAreaView>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,

@@ -9,7 +9,7 @@ export default function SplashScreen({ navigation }) {
   useEffect(() => {
     setTimeout(() => {
       navigation.replace('Onboarding');
-    }, 3000); // Adjust the delay as needed
+    }, 3000);
   }, [navigation]);
 
   return (
@@ -33,14 +33,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#3E1F92',
   },
   logo: {
-    fontSize: wp('8%'), // Scaled font size
+    fontSize: wp('8%'), 
     color: '#fff',
-    marginBottom: hp('2%'), // Adjusted margin with responsive dimensions
+    marginBottom: hp('2%'),
     fontWeight: 'bold',
   },
   logoImage: {
-    width: wp('40%'), // Adjusted with responsive dimensions
+    width: wp('40%'),
     height: wp('40%'),
-    resizeMode: 'contain', // Ensures the logo fits within the bounds
+    resizeMode: 'contain',
   },
 });

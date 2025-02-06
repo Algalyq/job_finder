@@ -3,10 +3,10 @@ import { SafeAreaView, StyleSheet, View, Text, TouchableOpacity } from 'react-na
 import Onboarding_img from '../../assets/onboarding_svg';
 import Next_onboard from '../../assets/next_onboard';
 import { useFonts, DMSans_400Regular, DMSans_700Bold } from '@expo-google-fonts/dm-sans';
-import { useNavigation } from '@react-navigation/native'; // Import useNavigation
+import { useNavigation } from '@react-navigation/native'; 
 
 const Onboarding = () => {
-  const navigation = useNavigation(); // Hook to get the navigation prop
+  const navigation = useNavigation(); 
 
   let [fontsLoaded] = useFonts({
     DMSans_400Regular,
@@ -14,10 +14,10 @@ const Onboarding = () => {
   });
 
   if (!fontsLoaded) {
-    return null; // Render a fallback or loader until fonts are loaded
+    return null; 
   }
 
-  // Navigate to the login screen
+
   const handleNext = () => {
     navigation.navigate('Login');
   };

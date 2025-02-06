@@ -1,10 +1,39 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import config from '../../config';
 
 export default function SignUpScreen({ navigation }) {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const handleSignUp = async () => {
+    try {
+      // Make POST request to /api/register/ endpoint
+      const response = await fetch(`${config.baseURL}/api/register/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          full_name: fullName,
+          email: email,
+          password: password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        navigation.navigate("HomeScreen");
+       } else {
+        // If an error occurs, show the error message
+        Alert.alert('Error', data.detail || 'Something went wrong. Please try again.', [{ text: 'OK' }]);
+      }
+    } catch (error) {
+      // If there's an issue with the network request, show a network error
+      Alert.alert('Error', 'Network error. Please check your connection and try again.', [{ text: 'OK' }]);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -28,7 +57,7 @@ export default function SignUpScreen({ navigation }) {
         secureTextEntry
         onChangeText={setPassword}
       />
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={handleSignUp}>
         <Text style={styles.buttonText}>SIGN UP</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate('Login')}>

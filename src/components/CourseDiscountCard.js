@@ -15,7 +15,7 @@ const CourseDiscountCard = () => {
         </View>
       </View>
       <Image
-        source={img} // Replace with the actual image URL
+        source={img}
         style={styles.image}
       />
     </View>

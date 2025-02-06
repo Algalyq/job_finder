@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, SafeAreaView, FlatList, Dimensions } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Image, SafeAreaView, FlatList, Dimensions,Platform,StatusBar } from 'react-native';
 import CourseDiscountCard from '../components/CourseDiscountCard';
 import HeadHuntingHome from '../../assets/headhunting.png';
 import JobCard from './JobCard';
-
+import Footer from '../components/Footer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-
+import config from '../../config';
 const { width: deviceWidth } = Dimensions.get('window');
 
 const jobs = [
@@ -75,7 +76,42 @@ export default function HomeScreen() {
 
   const navigation = useNavigation();
   const [offerTextContainerWidth, setOfferTextContainerWidth] = useState(0);
+  const [savedJobs, setSavedJobs] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
+  useEffect(() => {
+    const fetchSavedJobs = async () => {
+      try {
+        // await AsyncStorage.setItem('access', "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MDUxNzUxLCJpYXQiOjE3MzQ5NjUzNTEsImp0aSI6ImZmNzZhODZmNGNhMDQzOTk4ZDVlYzkyZmYwNjkzZTc3IiwidXNlcl9pZCI6MX0.yy2CpCFy1mml2dOPGtwuYikgTODvwQlpyZ-E8WTwERo");
+        const accessToken = await AsyncStorage.getItem('access');
+        if (!accessToken) {
+          throw new Error('Access token not available');
+        }
+
+        const response = await fetch(`${config.baseURL}/api/recent-jobs/`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error fetching saved jobs: ${response.status}`);
+        }
+
+        const data = await response.json();
+        // console.log(data);
+        setSavedJobs(data); // Assuming the API response is a list of jobs
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchSavedJobs();
+  }, []);
   const renderHeader = () => (
     <>
       {/* Header Section */}
@@ -121,18 +157,36 @@ export default function HomeScreen() {
   const renderJob = ({ item }) => (
     <JobCard
       job={item}
-      onPress={() => navigation.navigate('JobDetails', { job: item })}
+      onPress={() => navigation.navigate('JobDetails', { job: item.job })}
     />
   );
+
+  if (isLoading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Text>Loading...</Text>
+      </SafeAreaView>
+    );
+  }
+
+  if (error) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Text>Error: {error}</Text>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
-        data={jobs}
+        data={savedJobs}
         renderItem={renderJob}
         keyExtractor={(item) => item.id}
         ListHeaderComponent={renderHeader} // Non-scrollable header
         contentContainerStyle={styles.listContainer} // Styling for list
       />
+        <Footer/>
     </SafeAreaView>
   );
 }
@@ -141,6 +195,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F9F9F9',
+    paddingTop: Platform.OS === 'ios' ? StatusBar.currentHeight : 0,
   },
   header: {
     flexDirection: 'row',
