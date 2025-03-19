@@ -6,7 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage'; 
 import axios from 'axios';
-import { config } from '../../constants'
+import { API_BASE_URL } from '../../constants/config'
 
 
 const AddResume = () => {
@@ -61,7 +61,7 @@ const AddResume = () => {
       try {
         const accessToken = await AsyncStorage.getItem('access');
 
-        const response = await axios.post(`${config.API_BASE_URL}/api/upload_resume/`, formData, {
+        const response = await axios.post(`${API_BASE_URL}/api/upload_resume/`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
             Authorization: `Bearer ${accessToken}`,

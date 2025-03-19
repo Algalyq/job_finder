@@ -4,8 +4,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-import { COLORS, config } from '../../constants';
+import { API_BASE_URL } from '../../constants/config'
+import { COLORS } from '../../constants';
 import styles from '../../styles/profile';
 import { Navbar } from '../../components';
 
@@ -30,7 +30,7 @@ const EditProfile = () => {
             setLoading(true);
             const token = await AsyncStorage.getItem('access');
             const response = await axios.put(
-                `${config.API_BASE_URL}/api/profile/`,
+                `${API_BASE_URL}/api/profile/`,
                 {
                     first_name: formData.firstName,
                     last_name: formData.lastName,

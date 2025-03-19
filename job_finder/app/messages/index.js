@@ -4,7 +4,8 @@ import { Stack, useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { Navbar } from '../../components';
-import { COLORS, FONTS, SIZES,icons, config } from '../../constants';
+import { COLORS, FONTS, SIZES,icons } from '../../constants';
+import { API_BASE_URL } from '../../constants/config'
 
 const Messages = () => {
   const router = useRouter();
@@ -16,7 +17,7 @@ const Messages = () => {
     try {
       const accessToken = await AsyncStorage.getItem('access');
 
-      const response = await axios.get(`${config.API_BASE_URL}/api/messages/channels/`, {
+      const response = await axios.get(`${API_BASE_URL}/api/messages/channels/`, {
         headers: { Authorization: `Bearer ${accessToken}` }
       });
       setChannels(response.data);

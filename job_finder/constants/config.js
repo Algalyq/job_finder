@@ -1,6 +1,1 @@
-const config = {
-    API_BASE_URL: "https://api.example.com", // Change this URL as needed
-  };
-  
-  export default config;
-  
+export const API_BASE_URL = "http://0.0.0.0:8000";

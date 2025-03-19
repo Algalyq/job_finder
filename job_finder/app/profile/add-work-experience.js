@@ -14,7 +14,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { Platform } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage'; 
-import {config} from '../../constants'
+import { API_BASE_URL } from '../../constants/config'
 
 const AddWorkExperience = () => {
   const navigation = useNavigation();
@@ -47,7 +47,7 @@ const AddWorkExperience = () => {
     const fetchExperiences = async () => {
       try {
         const accessToken = await AsyncStorage.getItem('access');
-        const response = await axios.get(`${config.API_BASE_URL}/api/profile/work_experience/list/`, {
+        const response = await axios.get(`${API_BASE_URL}/api/profile/work_experience/list/`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -123,7 +123,7 @@ const AddWorkExperience = () => {
 
       const accessToken = await AsyncStorage.getItem('access');
       const response = await axios.patch(
-        `${config.API_BASE_URL}/api/profile/work_experience/`,
+        `${API_BASE_URL}/api/profile/work_experience/`,
         { experiences: experiencesToSave, delete_ids: deleteIds },
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );

@@ -14,7 +14,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { Platform } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage'; 
-import { config } from '../../constants'
+import { API_BASE_URL } from '../../constants/config'
  
 const AddEducation = () => {
     const navigation = useNavigation();
@@ -40,7 +40,7 @@ const AddEducation = () => {
       const fetchExperiences = async () => {
         try {
           const accessToken = await AsyncStorage.getItem('access');
-          const response = await axios.get(`${config.API_BASE_URL}/api/profile/education/list`, {
+          const response = await axios.get(`${API_BASE_URL}/api/profile/education/list`, {
             headers: {
               Authorization: `Bearer ${accessToken}`,
             },
@@ -78,7 +78,7 @@ const AddEducation = () => {
         const accessToken = await AsyncStorage.getItem('access');
     
         const response = await axios.patch(
-          `${config.API_BASE_URL}/api/profile/education/`,
+          `${API_BASE_URL}/api/profile/education/`,
           { educations: experiencesToSave },
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
