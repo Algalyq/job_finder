@@ -5,7 +5,7 @@ import { useRouter } from 'expo-router';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { COLORS } from '../../constants';
+import { COLORS, config } from '../../constants';
 import styles from '../../styles/profile';
 import { Navbar } from '../../components';
 
@@ -30,7 +30,7 @@ const EditProfile = () => {
             setLoading(true);
             const token = await AsyncStorage.getItem('access');
             const response = await axios.put(
-                'http://localhost:8000/api/profile/',
+                `${config.API_BASE_URL}/api/profile/`,
                 {
                     first_name: formData.firstName,
                     last_name: formData.lastName,

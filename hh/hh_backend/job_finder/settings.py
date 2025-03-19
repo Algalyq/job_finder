@@ -57,7 +57,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 ALLOWED_HOSTS = ['*']
 
 # Base URL for building absolute URIs
-BASE_URL = 'http://localhost:8000'  # Change this in production to your actual domain
+BASE_URL = 'http://0.0.0.0:8000'  # Change this in production to your actual domain
 
 
 TEMPLATES = [

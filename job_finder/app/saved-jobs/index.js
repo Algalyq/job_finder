@@ -19,6 +19,7 @@ import HeaderBtn from "../../components/shared/header-btn";
 import { icons } from "../../constants";
 import axios from "axios";
 import { Stack, useRouter } from "expo-router";
+import {config} from '../../constants'
 
 const SavedJobs = () => {
   const [jobsData, setJobsData] = useState([]);
@@ -60,7 +61,7 @@ const SavedJobs = () => {
   useEffect(() => {
     const fetchSavedJobs = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/api/new-saved-jobs/`, {
+        const response = await fetch(`${config.API_BASE_URL}/api/new-saved-jobs/`, {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${await AsyncStorage.getItem('access')}`,
@@ -102,7 +103,7 @@ const SavedJobs = () => {
       }
       console.log(job)
       // Create message channel
-      const response = await fetch('http://localhost:8000/api/messages/channels/', {
+      const response = await fetch(`${config.API_BASE_URL}/api/messages/channels/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -136,7 +137,7 @@ const SavedJobs = () => {
     try {
       console.log('Deleting job with ID:', jobId);
       const response = await axios.delete(
-        `http://localhost:8000/api/new-saved-jobs/${jobId}/`,
+        `${config.API_BASE_URL}/api/new-saved-jobs/${jobId}/`,
         {
           headers: {
             "Authorization": `Bearer ${accessToken}`,

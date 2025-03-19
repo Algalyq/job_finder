@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-
+import {config} from '../../constants/config'
 const skills = [
   'Leadership',
   'Teamwork',
@@ -44,7 +44,7 @@ const SkillSelection = () => {
   const handleAddSkillSave = async (skills) => {
     try {
       const accessToken = await AsyncStorage.getItem('access');
-      const response = await fetch('http://localhost:8000/api/profile/skills/', {
+      const response = await fetch(`${config.API_BASE_URL}/api/profile/skills/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -86,7 +86,7 @@ const SkillSelection = () => {
       const fetchProfile = async () => {
         try {
           const accessToken = await AsyncStorage.getItem('access');
-          const response = await axios.get(`http://localhost:8000/api/profile/`, {
+          const response = await axios.get(`${config.API_BASE_URL}/api/profile/`, {
             headers: {
               Authorization: `Bearer ${accessToken}`,
             },

@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { getAuthTokens, setAuthTokens, clearAuthTokens } from './auth';
 import { router } from 'expo-router';
-
-export const BASE_URL = 'http://localhost:8000/api';
+import {config} from '../constants/config'
+export const BASE_URL = `${config.API_BASE_URL}/api`;
 
 // Create axios instance with default config
 const api = axios.create({

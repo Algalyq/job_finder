@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';  
 import AsyncStorage from '@react-native-async-storage/async-storage'; 
 import { useRouter } from 'expo-router';
-
+import { config } from '../../constants';
 
 const AboutMe = () => {
     const router = useRouter();
@@ -19,7 +19,7 @@ const AboutMe = () => {
         const fetchAboutMe = async () => {
             try {
                 const accessToken = await AsyncStorage.getItem('access');
-                const response = await axios.get(`http://localhost:8000/api/profile/`, {
+                const response = await axios.get(`${config.API_BASE_URL}/api/profile/`, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`
                     }
@@ -41,7 +41,7 @@ const AboutMe = () => {
             setIsLoading(true);  // Set loading state when saving
             const accessToken = await AsyncStorage.getItem('access');
             const response = await axios.put(
-                `http://localhost:8000/api/profile/about`,
+                `${config.API_BASE_URL}/api/profile/about`,
                 { about_me: aboutMe },
                 {
                     headers: {

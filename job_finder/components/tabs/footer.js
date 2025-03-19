@@ -7,7 +7,7 @@ import {
   Linking,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { COLORS, FONTS, SIZES, icons } from "../../constants";
+import { COLORS, FONTS, SIZES, icons, config } from "../../constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { useRouter } from "expo-router";
@@ -35,7 +35,7 @@ export default function Footer({ url, data }) {
 
   const checkIfSaved = async (token) => {
     try {
-      const response = await axios.get("http://localhost:8000/api/new-saved-jobs/", {
+      const response = await axios.get(`${config.API_BASE_URL}/api/new-saved-jobs/`, {
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,
@@ -67,7 +67,7 @@ export default function Footer({ url, data }) {
     const logo = data[0].employer_logo;
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/new-saved-jobs/",
+        `${config.API_BASE_URL}/api/new-saved-jobs/`,
         {
           id: data[0].job_id,
           job_id: data[0].job_id,
@@ -95,7 +95,7 @@ export default function Footer({ url, data }) {
     try {
       console.log('Deleting job with ID:', jobId);
       const response = await axios.delete(
-        `http://localhost:8000/api/new-saved-jobs/${jobId}/`,
+        `${config.API_BASE_URL}/api/new-saved-jobs/${jobId}/`,
         {
           headers: {
             "Authorization": `Bearer ${accessToken}`,

@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-export const BASE_URL = 'http://localhost:8000/api';
+import {config} from '../constants/config'
+export const BASE_URL = `${config.API_BASE_URL}/api`;
 
 // Store auth tokens
 export const setAuthTokens = async (access, refresh) => {
