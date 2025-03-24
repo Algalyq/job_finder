@@ -1,12 +1,12 @@
 export const filterJobTypes = [
-  "Full-time",
-  "Part-time",
-  "Contract",
-  "Temporary",
-  "Internship",
-  "Volunteer",
-  "Remote",
-  "Freelance",
+  "Толық жұмыс күні",
+  "Жарты жұмыс күні",
+  "Келісімшарт",
+  "Уақытша",
+  "Тағылымдама",
+  "Еріктілік",
+  "Қашықтан",
+  "Фрилансер",
 ];
 
-export const tabs = ["About", "Qualifications", "Responsibilities"];
+export const tabs = ["Жайлы", "Біліктілік", "Міндеттер"];

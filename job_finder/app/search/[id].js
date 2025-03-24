@@ -98,15 +98,15 @@ export default function Search() {
           <>
             <View style={styles.container}>
               <Text style={styles.searchTitle}>{params.id}</Text>
-              <Text style={styles.noOfSearchedJobs}>Job Opportunities</Text>
+              <Text style={styles.noOfSearchedJobs}>Жұмыс мүмкіндіктері</Text>
             </View>
             <View style={styles.loaderWrapper}>
               {isLoading ? (
                 <ActivityIndicator size={"small"} color={COLORS.primary} />
               ) : error ? (
-                <Text style={styles.errorText}>Something went wrong</Text>
+                <Text style={styles.errorText}>Қате орын алды</Text>
               ) : data?.length === 0 ? (
-                <Text style={styles.errorText}>No jobs found</Text>
+                <Text style={styles.errorText}>Қол жетілік табылған жоқ</Text>
               ) : null}
             </View>
           </>

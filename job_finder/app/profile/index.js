@@ -15,7 +15,7 @@ const ProfileScreen = () => {
   if (!profile) {
     return (
       <Text>
-        <Text>Loading...</Text>
+        <Text>Жүктелуде...</Text>
       </Text>
     );
   }

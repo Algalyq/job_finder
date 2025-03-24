@@ -136,7 +136,7 @@ const AddWorkExperience = () => {
       }
     } catch (error) {
       console.error('Error saving experience', error);
-      alert("An error occurred while saving experiences.");
+      alert("Тәжірибені сақтау кезінде қате орын алды.");
     }
   };
 
@@ -148,37 +148,37 @@ const AddWorkExperience = () => {
             <Icon name="arrow-back" size={24} color="#130160" />
           </TouchableOpacity>
         </View>
-        <Text style={styles.header}>Add Work Experience</Text>
+        <Text style={styles.header}>Жұмыс тәжірибесін қосу</Text>
 
   {experiences.map((experience, index) => (
   <View key={index} style={styles.experienceBlock}>
-    <Text style={styles.label}>Job Title</Text>
+    <Text style={styles.label}>Қызмет атауы</Text>
     <TextInput
       style={styles.input}
-      placeholder="Enter job title"
+      placeholder="Қызмет атауын енгізіңіз"
       value={experience.job_title}
       onChangeText={(text) => handleInputChange(index, 'job_title', text)}
     />
 
-    <Text style={styles.label}>Company</Text>
+    <Text style={styles.label}>Компания</Text>
     <TextInput
       style={styles.input}
-      placeholder="Enter company"
+      placeholder="Компания атауын енгізіңіз"
       value={experience.company}
       onChangeText={(text) => handleInputChange(index, 'company', text)}
     />
 
 <View style={styles.dateContainer}>
   <View style={styles.dateInputContainer}>
-    <Text style={styles.label}>Start Date</Text>
+    <Text style={styles.label}>Басталу күні</Text>
     <TouchableOpacity onPress={() => openDatePicker(index, 'start_date')}>
       <Text style={styles.dateText}>
-        {experience.start_date ? experience.start_date : 'Select start date'}
+        {experience.start_date ? experience.start_date : 'Басталу күнін таңдаңыз'}
       </Text>
     </TouchableOpacity>
   </View>
   <View style={styles.dateInputContainer}>
-    <Text style={styles.label}>End Date</Text>
+    <Text style={styles.label}>Аяқталу күні</Text>
     <TouchableOpacity
       onPress={() => !experience.currentPosition && openDatePicker(index, 'end_date')} 
     >
@@ -188,7 +188,7 @@ const AddWorkExperience = () => {
           experience.currentPosition ? styles.disabledInput : {}, 
         ]}
       >
-        {experience.end_date ? experience.end_date : (experience.currentPosition ? 'Ongoing' : 'Select end date')}
+        {experience.end_date ? experience.end_date : (experience.currentPosition ? 'Жалғасуда' : 'Аяқталу күнін таңдаңыз')}
       </Text>
     </TouchableOpacity>
   </View>
@@ -199,14 +199,14 @@ const AddWorkExperience = () => {
   onPress={() => handleInputChange(index, 'currentPosition', !experience.currentPosition)}
 >
   <Text style={[styles.toggleButtonText, experience.currentPosition ? styles.currentPositionActiveText : null]}>
-    Current Position
+    Ағымдағы қызмет
   </Text>
 </TouchableOpacity>
 
 <Text style={styles.label}>Description</Text>
 <TextInput
   style={[styles.input, { height: 80 }]}
-  placeholder="Write additional information here"
+  placeholder="Қосымша ақпаратты осында жазыңыз"
   multiline
   value={experience.description}
   onChangeText={(text) => handleInputChange(index, 'description', text)}
@@ -215,18 +215,18 @@ const AddWorkExperience = () => {
   style={styles.deleteButton} 
   onPress={() => deleteExperience(index)}
 >
-  <Text style={styles.deleteButtonText}>Delete</Text>
+  <Text style={styles.deleteButtonText}>Өшіру</Text>
 </TouchableOpacity>
 
   </View>
 ))}
 
         <TouchableOpacity style={styles.addButton} onPress={addExperience}>
-          <Text style={styles.addButtonText}>+ Add another work experience</Text>
+          <Text style={styles.addButtonText}>+ Басқа жұмыс тәжірибесін қосу</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.saveButton} onPress={saveExperience}>
-          <Text style={styles.saveButtonText}>SAVE</Text>
+          <Text style={styles.saveButtonText}>САҚТАУ</Text>
         </TouchableOpacity>
       </ScrollView>
 

@@ -1,10 +1,10 @@
 import { Stack, useRouter, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useFonts } from 'expo-font';
 import { View, ActivityIndicator } from 'react-native';
-import { isAuthenticated, getAuthTokens, clearAuthTokens } from '../utils/auth';
 import { COLORS } from '../constants';
+import { AuthProvider, useAuth } from '../context/AuthContext';
 
 // Prevent auto-hiding of splash screen
 SplashScreen.preventAutoHideAsync();
@@ -19,69 +19,38 @@ const protectedRoutes = [
   '(tabs)',
 ];
 
-const Layout = () => {
+const LayoutInner = () => {
   const [fontsLoaded] = useFonts({
     DMBold: require('../assets/fonts/DMSans-Bold.ttf'),
     DMMedium: require('../assets/fonts/DMSans-Medium.ttf'),
     DMRegular: require('../assets/fonts/DMSans-Regular.ttf'),
   });
 
-  const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
-  const [authChecked, setAuthChecked] = useState(false);
+  const { isLoggedIn } = useAuth();
   const segments = useSegments();
   const router = useRouter();
-  useEffect(() => {
-    const initializeApp = async () => {
-      try {
-        console.log('Initializing app...');
-        const { access, refresh } = await getAuthTokens();
-        
-        if (!access || !refresh) {
-          console.log('No tokens found, redirecting to login...');
-          await clearAuthTokens();
-          setIsUserAuthenticated(false);
-          setAuthChecked(true);
-          return;
-        }
-
-        // Set authenticated state if we have tokens
-        setIsUserAuthenticated(true);
-        setAuthChecked(true);
-      } catch (error) {
-        console.error('Error during app initialization:', error);
-        await clearAuthTokens();
-        setIsUserAuthenticated(false);
-      } finally {
-        setAuthChecked(true);
-      }
-    };
-
-    initializeApp();
-  }, [router]);
 
   useEffect(() => {
-    if (!authChecked) return;
-
     const segment = segments[0] || '';
     const inAuthGroup = segment === 'auth';
     const isProtectedRoute = !inAuthGroup && protectedRoutes.some(route => segment.startsWith(route));
 
-    if (!isUserAuthenticated && isProtectedRoute) {
+    if (!isLoggedIn && isProtectedRoute) {
       console.log('Unauthorized access attempt, redirecting to login...');
       router.replace('/auth/login');
-    } else if (isUserAuthenticated && inAuthGroup) {
+    } else if (isLoggedIn && inAuthGroup) {
       console.log('Authenticated user accessing auth route, redirecting...');
       router.replace('/');
     }
-  }, [isUserAuthenticated, segments, authChecked, router]);
+  }, [isLoggedIn, segments, router]);
 
   const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded && authChecked) { // Add authChecked to ensure both are ready
+    if (fontsLoaded) {
       await SplashScreen.hideAsync();
     }
-  }, [fontsLoaded, authChecked]);
+  }, [fontsLoaded]);
 
-  if (!fontsLoaded || !authChecked) {
+  if (!fontsLoaded) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.lightWhite }}>
         <ActivityIndicator size="large" color={COLORS.primary} />
@@ -126,6 +95,14 @@ const Layout = () => {
       <Stack.Screen name="messages/index" options={{ headerShown: false }} />
       <Stack.Screen name="messages/[id]" options={{ headerShown: false }} />
     </Stack>
+  );
+};
+
+const Layout = () => {
+  return (
+    <AuthProvider>
+      <LayoutInner />
+    </AuthProvider>
   );
 };
 

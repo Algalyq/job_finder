@@ -44,7 +44,7 @@ const AddResume = () => {
       }
     } catch (err) {
       console.error('Error picking document:', err);
-      alert('Error picking document');
+      alert('Құжатты таңдау кезінде қате');
     }
   };
 
@@ -73,14 +73,14 @@ const AddResume = () => {
           navigation.goBack();
         } else {
           console.error('Error uploading resume:', response);
-          alert('Failed to upload resume');
+          alert('Түйіндемені жүктеу сәтсіз аяқталды');
         }
       } catch (error) {
         console.error('Error:', error);
-        alert('Error uploading resume');
+        alert('Түйіндемені жүктеу кезінде қате');
       }
     } else {
-      alert('Please select a resume');
+      alert('Түйіндемені таңдаңыз');
     }
   };
 
@@ -91,14 +91,14 @@ const AddResume = () => {
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
           <Text style={styles.backButtonText}>←</Text>
         </TouchableOpacity>
-        <Text style={styles.title}>Add Resume</Text>
+        <Text style={styles.title}>Түйіндеме қосу</Text>
       </View>
       {!resume ? (
       <View style={styles.resumeContainer}>
         <TouchableOpacity style={styles.container_upload} onPress={handleDocumentSelect}>
          <View style={styles.innerContainer}>
           <Icon name="file-upload-outline" size={24} color="#666" style={styles.icon} />
-          <Text style={styles.resumeButtonText}>Upload CV/Resume</Text>
+          <Text style={styles.resumeButtonText}>Түйіндемені жүктеу</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -126,10 +126,10 @@ const AddResume = () => {
       </>)}
 
       <Text style={styles.description}>
-        Upload files in PDF format up to 5 MB. Just upload it once and you can use it in your next application.
+        PDF форматындағы 5 МБ дейінгі файлдарды жүктеңіз. Бір рет жүктеп, келесі өтінімдерде қолдана аласыз.
       </Text>
       <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-        <Text style={styles.saveButtonText}>SAVE</Text>
+        <Text style={styles.saveButtonText}>САҚТАУ</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );

@@ -1,14 +1,33 @@
 import { View, Text, StyleSheet } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { COLORS, FONTS, SIZES } from "../../constants";
+import { make_request } from "../../constants/useGemini";
 
 export default function About({ info }) {
+  const [translatedInfo, setTranslatedInfo] = useState(info);
+
+  useEffect(() => {
+    const translateText = async () => {
+      try {
+        const prompt = `Translate this job description to Kazakh, dont write comments: ${info}`;
+        const response = await make_request(prompt);
+        if (response) {
+          setTranslatedInfo(response);
+        }
+      } catch (error) {
+        console.error('Translation error:', error);
+      }
+    };
+
+    translateText();
+  }, [info]);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>About this job:</Text>
+      <Text style={styles.title}>Бұл жұмыс туралы ақпарат:</Text>
 
       <View style={styles.contentBox}>
-        <Text style={styles.contentText}>{info}</Text>
+        <Text style={styles.contentText}>{translatedInfo}</Text>
       </View>
     </View>
   );

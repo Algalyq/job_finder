@@ -186,14 +186,14 @@ const SavedJobs = () => {
               onPress={() => createNavigateToMessage(item.id)}
             >
               <Feather name="send" size={24} color="#333" />
-              <Text style={styles.optionText}>Message</Text>
+              <Text style={styles.optionText}>Хабарлама</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.option}
               onPress={() => deleteJob(item.id)}
             >
               <Icon name="heart" size={24} color="#333" />
-              <Text style={styles.optionText}>Unsave</Text>
+              <Text style={styles.optionText}>Сақтаудан алып тастау</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -204,10 +204,10 @@ const SavedJobs = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Favourites</Text>
+        <Text style={styles.headerTitle}>Таңдаулылар</Text>
         <View style={styles.counter}>
           <Text style={styles.counterText}>
-            {countSavedJobs} saved jobs
+            {countSavedJobs} сақталған жұмыс
           </Text>
         </View>
       </View>

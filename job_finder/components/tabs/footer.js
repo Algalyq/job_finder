@@ -136,7 +136,7 @@ export default function Footer({ url, data }) {
         style={styles.applyBtn}
         onPress={() => Linking.openURL(url)}
       >
-        <Text style={styles.applyBtnText}>Apply</Text>
+        <Text style={styles.applyBtnText}>Өтініш беру</Text>
       </TouchableOpacity>
     </View>
   );

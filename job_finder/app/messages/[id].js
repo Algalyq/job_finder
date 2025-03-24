@@ -86,7 +86,7 @@ const ChatPage = () => {
       const response = await make_request(prompt);
       if (!mountedRef.current) return; // Check again after await
       if (!response) {
-        console.log('An error occurred, please try again');
+        console.log('Қате орын алды, қайталап көріңіз');
         return;
       }
       const message = { content: response, sender: "system" };
@@ -174,7 +174,7 @@ const ChatPage = () => {
           </View>
         ) : (
           <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-            <Text style={{ color: appColor.inverseWhiteBlack, fontSize: 18 }}>No messages yet</Text>
+            <Text style={{ color: appColor.inverseWhiteBlack, fontSize: 18 }}>Әзірше хабарламалар жоқ</Text>
           </View>
         )}
       </ScrollView>
@@ -205,7 +205,7 @@ const ChatPage = () => {
                 styles.textInput,
                 { borderWidth: 1, borderColor: appColor.line_color, color: appColor.inverseWhiteBlack },
               ]}
-              placeholder="Type here"
+              placeholder="Мұнда теріңіз"
               value={prompt}
               placeholderTextColor={appColor.line_color}
               onChangeText={(text) => setPrompt(text)}
@@ -221,7 +221,7 @@ const ChatPage = () => {
               marginLeft: 10,
             }}
           >
-            <Text style={{ color: "#fff", fontSize: 16 }}>Send</Text>
+            <Text style={{ color: "#fff", fontSize: 16 }}>Жіберу</Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>

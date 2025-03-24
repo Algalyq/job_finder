@@ -33,18 +33,18 @@ export default function Details() {
   }, []);
 
 
-
+  // export const tabs = ["Жайлы", "Біліктілік", "Міндеттер"];
   const renderTabContent = () => {
     switch (activeTab) {
-      case "About":
+      case "Жайлы":
         return <About info={data[0].job_description ?? "No data provided"} />;
-      case "Qualifications":
+      case "Біліктілік":
         return (
           <Qualification
             info={data[0].job_highlights?.Qualifications ?? ["N/A"]}
           />
         );
-      case "Responsibilities":
+      case "Міндеттер":
         return (
           <Responsibility
             info={data[0].job_highlights?.Responsibilities ?? ["N/A"]}

@@ -4,15 +4,15 @@ import { useRouter } from 'expo-router'
 import styles from './welcome.style';
 import { icons, SIZES } from '../../../constants';
 import  useFetchProfile  from '../../../hook/useFetchProfile';
-const jobTypes = ['Full-time', 'Part-time', 'contractor'];
+const jobTypes = ['Толық жұмыс күні', 'Жарты жұмыс күні', 'Келісімшарт'];
 
 const Welcome = ({searchTerm,setSearchTerm,handleClick}) => {
   const router = useRouter();
   
   const { profile } = useFetchProfile(); 
   console.log(profile)
-  const [activeJobType, setActiveJobType] = useState('Full-time');
-  const [fullName, setFullName] = useState('Dear Guest');
+  const [activeJobType, setActiveJobType] = useState('Толық жұмыс күні');
+  const [fullName, setFullName] = useState('Құрметті қонақ');
 
   useEffect(() => {
     if (profile?.full_name) {
@@ -22,13 +22,13 @@ const Welcome = ({searchTerm,setSearchTerm,handleClick}) => {
   return (
     <View>
       <View style={styles.container}>
-        <Text style={styles.userName}>Hello {fullName}</Text>
-        <Text style={styles.welcomeMessage}> Find your Perfect job</Text>
+        <Text style={styles.userName}>Сәлем {fullName}</Text>
+        <Text style={styles.welcomeMessage}>Өзіңізге лайықты жұмыс табыңыз</Text>
       </View>
       <View style={styles.searchContainer}>
         <View style={styles.searchWrapper}>
           <TextInput style={styles.searchInput} value={searchTerm} onChangeText={(text) => setSearchTerm(text)}
-            placeholder="What are you looking for?" />
+            placeholder="Нені іздеп жатырсыз?" />
         </View>
         <TouchableOpacity style={styles.searchBtn} onPress={handleClick}>
           <Image source={icons.search}

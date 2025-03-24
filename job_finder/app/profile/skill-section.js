@@ -8,16 +8,16 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 import { API_BASE_URL } from '../../constants/config'
 const skills = [
-  'Leadership',
-  'Teamwork',
-  'Problem Solving',
-  'Communication',
-  'Project Management',
-  'Time Management',
-  'Adaptability',
-  'Critical Thinking',
-  'Collaboration',
-  'Decision Making',
+  'Көшбасшылық',
+  'Топтық жұмыс',
+  'Мәселелерді шешу',
+  'Қарым-қатынас',
+  'Жобаларды басқару',
+  'Уақытты басқару',
+  'Бейімделу',
+  'Сыни ойлау',
+  'Ынтымақтастық',
+  'Шешім қабылдау',
 ];
 
 const SkillSelection = () => {
@@ -64,11 +64,11 @@ const SkillSelection = () => {
       } else {
         const errorData = await response.json();
         console.error('Error saving skills:', errorData);
-        alert('Failed to save skills. Please try again.');
+        alert('Дағдыларды сақтау сәтсіз аяқталды. Қайталап көріңіз.');
       }
     } catch (error) {
       console.error('Unexpected error:', error);
-      alert('An unexpected error occurred. Please try again later.');
+      alert('Күтпеген қате орын алды. Кейінірек қайталап көріңіз.');
     }
   };
 
@@ -108,7 +108,7 @@ const SkillSelection = () => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color="#130160" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Manage Skills</Text>
+        <Text style={styles.headerTitle}>Дағдыларды басқару</Text>
         <View style={{ width: 24 }} />
       </View>
 
@@ -116,7 +116,7 @@ const SkillSelection = () => {
         <Ionicons name="search-outline" size={20} color="#9A9A9A" />
         <TextInput
           style={styles.searchInput}
-          placeholder="Search skills to add"
+          placeholder="Дағдыларды іздеу"
           value={searchQuery}
           onChangeText={setSearchQuery}
           placeholderTextColor="#9A9A9A"
@@ -125,7 +125,7 @@ const SkillSelection = () => {
 
       {selectedSkills.length > 0 && (
         <>
-          <Text style={styles.sectionTitle}>Your Skills</Text>
+          <Text style={styles.sectionTitle}>Сіздің дағдыларыңыз</Text>
           <View style={styles.skillsContainer}>
             {selectedSkills.map((skill) => (
               <TouchableOpacity
@@ -143,7 +143,7 @@ const SkillSelection = () => {
 
       {filteredSkills.length > 0 && (
         <>
-          <Text style={styles.sectionTitle}>Suggested Skills</Text>
+          <Text style={styles.sectionTitle}>Ұсынылған дағдылар</Text>
           <View style={styles.skillsContainer}>
             {filteredSkills.map((skill) => (
               <TouchableOpacity
@@ -160,7 +160,7 @@ const SkillSelection = () => {
       )}
 
       <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-        <Text style={styles.buttonText}>DONE</Text>
+        <Text style={styles.buttonText}>ДАЙЫН</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );

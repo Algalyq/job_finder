@@ -20,15 +20,15 @@ export default function MyJobs() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Jobs for you</Text>
+      <Text style={styles.title}>Сіз үшін жұмыс орындары</Text>
 
       <View style={styles.jobsContainer}>
         {isLoading ? (
           <ActivityIndicator size={"small"} color={COLORS.primary} />
         ) : error ? (
-          <Text style={styles.errorText}>Something went wrong</Text>
+          <Text style={styles.errorText}>Қате қоққылық</Text>
         ) : data?.length === 0 ? (
-          <Text style={styles.errorText}>No jobs found</Text>
+          <Text style={styles.errorText}>Қол жетілік табылған</Text>
         ) : (
           <FlatList
             data={data}

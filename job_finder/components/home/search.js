@@ -12,7 +12,7 @@ import { StyleSheet } from "react-native";
 import { COLORS, FONTS, SIZES, filterJobTypes, icons } from "../../constants";
 
 export default function Search() {
-  const [activeJobType, setActiveJobType] = useState("Full-time");
+  const [activeJobType, setActiveJobType] = useState("Толық жұмыс күні");
   const [term, setTerm] = useState("");
 
   const router = useRouter();
@@ -34,7 +34,7 @@ export default function Search() {
         <View style={styles.searchWrapper}>
           <TextInput
             style={styles.searchInput}
-            placeholder="What are you looking for?"
+            placeholder="Нені іздеп жатырсыз?"
             placeholderTextColor={COLORS.gray}
             value={term}
             onChangeText={(text) => setTerm(text)}

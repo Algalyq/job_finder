@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, Alert, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
-import { register } from '../../utils/auth';
+import { useAuth } from '../../context/AuthContext';
 
 import { COLORS, SIZES } from '../../constants';
 import styles from '../../styles/auth';
@@ -9,6 +9,7 @@ import { images } from '../../constants';
 
 const Register = () => {
     const router = useRouter();
+    const { login } = useAuth();
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -28,17 +29,17 @@ const Register = () => {
     const handleRegister = async () => {
         // Validate form data
         if (!formData.email || !formData.password || !formData.firstName || !formData.lastName) {
-            Alert.alert('Error', 'Please fill in all fields');
+            Alert.alert('Қате', 'Барлық өрістерді толтырыңыз');
             return;
         }
 
         if (formData.password !== formData.confirmPassword) {
-            Alert.alert('Error', 'Passwords do not match');
+            Alert.alert('Қате', 'Құпия сөздер сәйкес келмейді');
             return;
         }
 
         if (formData.password.length < 6) {
-            Alert.alert('Error', 'Password must be at least 6 characters long');
+            Alert.alert('Қате', 'Құпия сөз кемінде 6 таңбадан тұруы керек');
             return;
         }
 
@@ -52,13 +53,19 @@ const Register = () => {
             });
             
             if (success) {
-                router.replace('/');
+                // After successful registration, automatically log in
+                const loginResult = await login(formData.email, formData.password);
+                if (loginResult.success) {
+                    router.replace('/');
+                } else {
+                    Alert.alert('Қате', 'Тіркелу сәтті болды, бірақ кіру кезінде қате орын алды');
+                }
             } else {
-                Alert.alert('Error', error || 'Registration failed');
+                Alert.alert('Қате', error || 'Тіркелу сәтсіз аяқталды');
             }
         } catch (error) {
             console.error('Registration error:', error);
-            Alert.alert('Error', 'An unexpected error occurred');
+            Alert.alert('Қате', 'Күтпеген қате орын алды');
         } finally {
             setLoading(false);
         }
@@ -73,24 +80,24 @@ const Register = () => {
                 /> */}
             </View>
 
-            <Text style={styles.title}>Create Account</Text>
+            <Text style={styles.title}>Тіркелгі жасау</Text>
             
             <View style={styles.inputContainer}>
                 <TextInput
                     style={styles.input}
-                    placeholder="First Name"
+                    placeholder="Аты"
                     value={formData.firstName}
                     onChangeText={(value) => handleChange('firstName', value)}
                 />
                 <TextInput
                     style={styles.input}
-                    placeholder="Last Name"
+                    placeholder="Тегі"
                     value={formData.lastName}
                     onChangeText={(value) => handleChange('lastName', value)}
                 />
                 <TextInput
                     style={styles.input}
-                    placeholder="Email"
+                    placeholder="Электрондық пошта"
                     value={formData.email}
                     onChangeText={(value) => handleChange('email', value)}
                     keyboardType="email-address"
@@ -98,14 +105,14 @@ const Register = () => {
                 />
                 <TextInput
                     style={styles.input}
-                    placeholder="Password"
+                    placeholder="Құпия сөз"
                     value={formData.password}
                     onChangeText={(value) => handleChange('password', value)}
                     secureTextEntry
                 />
                 <TextInput
                     style={styles.input}
-                    placeholder="Confirm Password"
+                    placeholder="Құпия сөзді қайталаңыз"
                     value={formData.confirmPassword}
                     onChangeText={(value) => handleChange('confirmPassword', value)}
                     secureTextEntry
@@ -120,14 +127,14 @@ const Register = () => {
                 {loading ? (
                     <ActivityIndicator color="#FFFFFF" />
                 ) : (
-                    <Text style={styles.buttonText}>Register</Text>
+                    <Text style={styles.buttonText}>Тіркелу</Text>
                 )}
             </TouchableOpacity>
 
             <View style={styles.footer}>
-                <Text style={styles.footerText}>Already have an account? </Text>
+                <Text style={styles.footerText}>Тіркелгіңіз бар ма? </Text>
                 <TouchableOpacity onPress={() => router.push('/auth/login')}>
-                    <Text style={styles.footerLink}>Login</Text>
+                    <Text style={styles.footerLink}>Кіру</Text>
                 </TouchableOpacity>
             </View>
         </View>

@@ -86,14 +86,14 @@ const AddEducation = () => {
     
         if (response.data.errors && response.data.errors.length > 0) {
           console.error('Errors saving experiences:', response.data.errors);
-          alert("Some experiences failed to save. See console for details.");
+          alert("Кейбір тәжірибелерді сақтау сәтсіз аяқталды.");
         } else {
           console.log('Experience saved', response.data);
           navigation.goBack();
         }
       } catch (error) {
         console.error('Error saving experience', error);
-        alert("An error occurred while saving experiences.");
+        alert("Тәжірибені сақтау кезінде қате орын алды.");
       }
     };
   
@@ -133,45 +133,45 @@ const AddEducation = () => {
               <Icon name="arrow-back" size={24} color="#130160" />
             </TouchableOpacity>
           </View>
-          <Text style={styles.header}>Add education experience</Text>
+          <Text style={styles.header}>Білім тәжірибесін қосу</Text>
   
           {experiences.map((experience, index) => (
           <View key={index} style={styles.experienceBlock}>
-            <Text style={styles.label}>Level of education</Text>
+            <Text style={styles.label}>Білім деңгейі</Text>
             <TextInput
               style={styles.input}
-              placeholder="Enter level of education"
+              placeholder="Білім деңгейін енгізіңіз"
               value={experience.level_of_education}
               onChangeText={(text) => handleInputChange(index, 'level_of_education', text)}
             />
 
-    <Text style={styles.label}>Institution name</Text>
+    <Text style={styles.label}>Оқу орнының атауы</Text>
     <TextInput
       style={styles.input}
-      placeholder="Enter institution name"
+      placeholder="Оқу орнының атауын енгізіңіз"
       value={experience.university_name}
       onChangeText={(text) => handleInputChange(index, 'university_name', text)}
     />
 
-<Text style={styles.label}>Field study</Text>
+<Text style={styles.label}>Мамандық</Text>
     <TextInput
       style={styles.input}
-      placeholder="Enter field study"
+      placeholder="Мамандықты енгізіңіз"
       value={experience.field_of_study}
       onChangeText={(text) => handleInputChange(index, 'field_of_study', text)}
     />
 
     <View style={styles.dateContainer}>
       <View style={styles.dateInputContainer}>
-        <Text style={styles.label}>Start date</Text>
+        <Text style={styles.label}>Басталу күні</Text>
         <TouchableOpacity onPress={() => openDatePicker(index, 'start_date')}>
           <Text style={styles.dateText}>
-            {experience.start_date ? experience.start_date : 'Select start date'}
+            {experience.start_date ? experience.start_date : 'Басталу күнін таңдаңыз'}
           </Text>
         </TouchableOpacity>
       </View>
       <View style={styles.dateInputContainer}>
-        <Text style={styles.label}>End date</Text>
+        <Text style={styles.label}>Аяқталу күні</Text>
         <TouchableOpacity
           onPress={() => !experience.currentPosition && openDatePicker(index, 'end_date')} // Prevent opening if currentPosition is true
         >
@@ -181,7 +181,7 @@ const AddEducation = () => {
               experience.currentPosition ? styles.disabledInput : {}, // Style for disabled input
             ]}
           >
-            {experience.end_date ? experience.end_date : (experience.currentPosition ? 'Ongoing' : 'Select end date')}
+            {experience.end_date ? experience.end_date : (experience.currentPosition ? 'Жалғасуда' : 'Аяқталу күнін таңдаңыз')}
           </Text>
         </TouchableOpacity>
       </View>
@@ -192,11 +192,11 @@ const AddEducation = () => {
        style={[styles.toggleButton, experience.currentPosition ? styles.currentPositionActive : null]}
        onPress={() => handleInputChange(index, 'currentPosition', !experience.currentPosition)}
     >
-      <Text style={[styles.toggleButtonText, experience.currentPosition ? styles.currentPositionActiveText : null]}>Current Position
+      <Text style={[styles.toggleButtonText, experience.currentPosition ? styles.currentPositionActiveText : null]}>Ағымдағы оқу
       </Text>
     </TouchableOpacity>
 
-    <Text style={styles.label}>Description</Text>
+    <Text style={styles.label}>Сипаттама</Text>
     <TextInput
       style={[styles.input, { height: 80 }]}
       placeholder="Write additional information here"
@@ -209,11 +209,11 @@ const AddEducation = () => {
 
   
           <TouchableOpacity style={styles.addButton} onPress={addExperience}>
-            <Text style={styles.addButtonText}>+ Add another work experience</Text>
+            <Text style={styles.addButtonText}>+ Басқа жұмыс тәжірибесін қосыңыз</Text>
           </TouchableOpacity>
   
           <TouchableOpacity style={styles.saveButton} onPress={saveExperience}>
-            <Text style={styles.saveButtonText}>SAVE</Text>
+            <Text style={styles.saveButtonText}>Сақтау</Text>
           </TouchableOpacity>
         </ScrollView>
   

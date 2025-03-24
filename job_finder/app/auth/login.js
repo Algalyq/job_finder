@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, Alert, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
-import { login } from '../../utils/auth';
+import { useAuth } from '../../context/AuthContext';
 
 import { COLORS, SIZES } from '../../constants';
 import styles from '../../styles/auth';
@@ -13,9 +13,11 @@ const Login = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
+    const { login } = useAuth();
+
     const handleLogin = async () => {
       if (!email || !password) {
-        setError('Please fill in all fields');
+        setError('Барлық өрістерді толтырыңыз');
         return;
       }
 
@@ -29,11 +31,11 @@ const Login = () => {
           router.replace('/');
         } else {
           console.error('Login failed:', result.error);
-          setError(result.error || 'Login failed');
+          setError(result.error || 'Кіру сәтсіз аяқталды');
         }
       } catch (error) {
         console.error('Login error:', error);
-        setError('An unexpected error occurred');
+        setError('Күтпеген қате орын алды');
       } finally {
         setLoading(false);
       }
@@ -48,7 +50,7 @@ const Login = () => {
                 /> */}
             </View>
 
-            <Text style={styles.title}>Welcome Back</Text>
+            <Text style={styles.title}>Қайта келгеніңізге қуаныштымыз</Text>
             
             {error ? (
               <Text style={styles.errorText}>{error}</Text>
@@ -57,7 +59,7 @@ const Login = () => {
             <View style={styles.inputContainer}>
                 <TextInput
                     style={styles.input}
-                    placeholder="Email"
+                    placeholder="Электрондық пошта"
                     value={email}
                     onChangeText={setEmail}
                     keyboardType="email-address"
@@ -65,7 +67,7 @@ const Login = () => {
                 />
                 <TextInput
                     style={styles.input}
-                    placeholder="Password"
+                    placeholder="Құпия сөз"
                     value={password}
                     onChangeText={setPassword}
                     secureTextEntry
@@ -80,14 +82,14 @@ const Login = () => {
                 {loading ? (
                     <ActivityIndicator color="#FFFFFF" />
                 ) : (
-                    <Text style={styles.buttonText}>Login</Text>
+                    <Text style={styles.buttonText}>Кіру</Text>
                 )}
             </TouchableOpacity>
 
             <View style={styles.footer}>
-                <Text style={styles.footerText}>Don't have an account? </Text>
+                <Text style={styles.footerText}>Тіркелгіңіз жоқ па? </Text>
                 <TouchableOpacity onPress={() => router.push('/auth/register')}>
-                    <Text style={styles.footerLink}>Register</Text>
+                    <Text style={styles.footerLink}>Тіркелу</Text>
                 </TouchableOpacity>
             </View>        </View>
     );

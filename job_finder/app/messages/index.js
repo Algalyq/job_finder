@@ -23,7 +23,7 @@ const Messages = () => {
       setChannels(response.data);
       setError(null);
     } catch (err) {
-      setError('Failed to load message channels');
+      setError('Хабарламаларды жүктеу сәтсіз аяқталды');
       console.error('Error fetching channels:', err);
     } finally {
       setLoading(false);
@@ -59,7 +59,7 @@ const Messages = () => {
       
         <View style={styles.messagePreview}>
           <Text style={styles.lastMessage} numberOfLines={1}>
-            {item.last_message || 'Start a conversation'}
+            {item.last_message || 'Әңгімені бастау'}
           </Text>
         </View>
       </View>
@@ -74,7 +74,7 @@ const Messages = () => {
         options={{
           headerStyle: { backgroundColor: COLORS.lightWhite },
           headerShadowVisible: false,
-          headerTitle: 'Messages',
+          headerTitle: 'Хабарламалар',
           headerTitleStyle: {
             fontFamily: FONTS.bold,
             color: COLORS.primary,
@@ -83,7 +83,7 @@ const Messages = () => {
       />
 
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Messages</Text>
+        <Text style={styles.headerTitle}>Хабарламалар</Text>
       </View>
       
       <View style={styles.content}>
@@ -92,7 +92,7 @@ const Messages = () => {
         ) : error ? (
           <Text style={styles.errorText}>{error}</Text>
         ) : channels.length === 0 ? (
-          <Text style={styles.emptyText}>No messages yet</Text>
+          <Text style={styles.emptyText}>Әзірше хабарламалар жоқ</Text>
         ) : (
           <FlatList
             data={channels}

@@ -23,7 +23,7 @@ const ProfileSections = ({ profile }) => {
           <View style={styles.sectionIcon}>
             <Ionicons name="person-outline" size={24} color="#FF9500" />
           </View>
-          <Text style={styles.sectionTitle}>About me</Text>
+          <Text style={styles.sectionTitle}>Мен туралы</Text>
           {profile.about_me ? (
             <Ionicons name="pencil-outline" size={20} color="#FF9500" />
           ) : (
@@ -54,7 +54,7 @@ const ProfileSections = ({ profile }) => {
           <View style={styles.sectionIcon}>
             <MaterialIcons name="work-outline" size={24} color="#FF9500" />
           </View>
-          <Text style={styles.sectionTitle}>Work experience</Text>
+          <Text style={styles.sectionTitle}>Жұмыс тәжірибесі</Text>
           {profile.work_experiences && profile.work_experiences.length > 0 ? (
             <Ionicons name="pencil-outline" size={24} color="#FF9500" />
           ) : (
@@ -90,7 +90,7 @@ const ProfileSections = ({ profile }) => {
           <View style={styles.sectionIcon}>
             <Ionicons name="school-outline" size={24} color="#FF9500" />
           </View>
-          <Text style={styles.sectionTitle}>Education experience</Text>
+          <Text style={styles.sectionTitle}>Білім</Text>
           {profile.educations && profile.educations.length > 0 ? (
             <Ionicons name="pencil-outline" size={24} color="#FF9500" />
           ) : (
@@ -128,7 +128,7 @@ const ProfileSections = ({ profile }) => {
           <View style={styles.sectionIcon}>
             <Ionicons name="bulb-outline" size={24} color="#FF9500" />
           </View>
-          <Text style={styles.sectionTitle}>Skills</Text>
+          <Text style={styles.sectionTitle}>Қабілеттер</Text>
           {profile?.skills?.length > 0 ? (
             <Ionicons name="pencil-outline" size={24} color="#FF9500" />
           ) : (
@@ -164,7 +164,7 @@ const ProfileSections = ({ profile }) => {
           <View style={styles.sectionIcon}>
             <Ionicons name="documents-outline" size={24} color="#FF9500" />
           </View>
-          <Text style={styles.sectionTitle}>Resume</Text>
+          <Text style={styles.sectionTitle}>Резюме</Text>
           {profile.resume ? (
             <Ionicons name="pencil-outline" size={24} color="#FF9500" />
           ) : (

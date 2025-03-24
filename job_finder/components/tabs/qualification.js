@@ -1,14 +1,36 @@
 import { View, Text, StyleSheet } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { COLORS, FONTS, SIZES } from "../../constants";
+import { make_request } from "../../constants/useGemini";
 
 export default function Qualification({ info }) {
+  const [translatedItems, setTranslatedItems] = useState(info);
+
+  useEffect(() => {
+    const translateItems = async () => {
+      try {
+        const translatedArray = await Promise.all(
+          info.map(async (item) => {
+            const prompt = `Translate this qualification to Kazakh, dont write comments: ${item}`;
+            const response = await make_request(prompt);
+            return response || item;
+          })
+        );
+        setTranslatedItems(translatedArray);
+      } catch (error) {
+        console.error('Translation error:', error);
+      }
+    };
+
+    translateItems();
+  }, [info]);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Qualification: </Text>
+      <Text style={styles.title}>Біліктілік талаптары: </Text>
 
       <View style={styles.contentBox}>
-        {info.map((item, index) => (
+        {translatedItems.map((item, index) => (
           <View style={styles.infoWrapper} key={item + index}>
             <Text style={styles.dot} />
             <Text style={styles.contentText}>{item}</Text>
