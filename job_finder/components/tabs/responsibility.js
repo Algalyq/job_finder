@@ -4,39 +4,41 @@ import { COLORS, FONTS, SIZES } from "../../constants";
 import { make_request } from "../../constants/useGemini";
 
 export default function Responsibility({ info }) {
-  const [translatedItems, setTranslatedItems] = useState(info);
+const [translatedInfo, setTranslatedInfo] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const translateItems = async () => {
+    const translateText = async () => {
       try {
-        const translatedArray = await Promise.all(
-          info.map(async (item) => {
-            const prompt = `Translate this job responsibility to Kazakh, dont write comments: ${item}`;
-            const response = await make_request(prompt);
-            return response || item;
-          })
-        );
-        setTranslatedItems(translatedArray);
+        setLoading(true);
+        const prompt = `Now will be text on kazakh language, answer on kazakh language: ${info}`;
+        const response = await make_request(prompt);
+        if (response) {
+          setTranslatedInfo(response);
+        }
       } catch (error) {
         console.error('Translation error:', error);
+        setTranslatedInfo("Аудару кезінде қате орын алды.");
+      } finally {
+        setLoading(false);
       }
     };
 
-    translateItems();
+    translateText();
   }, [info]);
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Міндеттері: </Text>
 
-      <View style={styles.contentBox}>
-        {translatedItems.map((item, index) => (
-          <View style={styles.infoWrapper} key={item + index}>
-            <Text style={styles.dot} />
-            <Text style={styles.contentText}>{item}</Text>
-          </View>
-        ))}
+<View style={styles.contentBox}>
+        {loading ? (
+          <Text style={styles.loadingText}>Жүктелуде...</Text>
+        ) : (
+          <Text style={styles.contentText}>{translatedInfo}</Text>
+        )}
       </View>
+
     </View>
   );
 }
@@ -54,7 +56,7 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.bold,
   },
   contentBox: {
-    marginVertical: SIZES.small,
+    marginVertical: SIZES.medium,
   },
   infoWrapper: {
     flexDirection: "row",
@@ -70,7 +72,7 @@ const styles = StyleSheet.create({
     marginTop: 6,
   },
   contentText: {
-    fontSize: SIZES.medium - 2,
+    fontSize: SIZES.medium,
     color: COLORS.gray,
     fontFamily: FONTS.regular,
     marginLeft: SIZES.small,

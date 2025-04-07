@@ -1,123 +1,153 @@
-import { View, Text, StyleSheet, Image } from "react-native";
-import React, { useState } from "react";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+} from "react-native";
+import React from "react";
 import { COLORS, FONTS, SIZES, icons, SHADOWS } from "../../constants";
 import { useRouter } from "expo-router";
+import { API_BASE_URL } from "../../constants/config";
 
 export default function MyJobCard({ item, selectedJob, setSelectedJob }) {
   const router = useRouter();
-
   const handlePress = () => {
-    router.push(`/job-details/${item?.job_id}`);
-    setSelectedJob(item?.job_id);
+    router.push(`/job-details/${item?.id}`);
+    setSelectedJob(item?.id);
   };
+
+  console.log(item.logo)
 
   return (
     <TouchableOpacity
-      style={styles.container(selectedJob, item?.job_id)}
+      style={styles.card(selectedJob, item?.id)}
       onPress={handlePress}
     >
-      <View style={styles.employerWrapper}>
-        <View style={styles.employerHeader}>
-          <Image
-            source={{
-              uri: item?.employer_logo
-                ? item.employer_logo
-                : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQO0-uMT750aKUESYouIjtAZkT13UALJtvxz2V1&s=0",
-            }}
-            style={styles.employerLogo}
-          />
-          <Text style={styles.employerTitle}>
-            {item?.employer_name.length >= 20
-              ? <Text>{item?.employer_name.slice(0, 20)}...</Text>
-              : <Text>{item?.employer_name}</Text>}
-          </Text>
+      {/* Header */}
+      <View style={styles.header}>
+        <View style={styles.employerWrapper}>
+        <Image source={item.logo ? { uri: `${API_BASE_URL}/${item.logo}` } : icons.watpad} style={styles.employerLogo} />
+
+        <Text style={styles.title}>{item?.title}</Text>
         </View>
-        <TouchableOpacity style={styles.heartBtnWrapper}>
-          <Image
-            source={icons.heart}
-            style={styles.heartIcon(selectedJob, item.job_id)}
-          />
-        </TouchableOpacity>
+        <View style={styles.iconRow}>
+          <Image source={icons.heart} style={styles.icon} />
+        </View>
       </View>
 
-      <View style={styles.infoContainer}>
-        <Text style={styles.jobName(selectedJob, item.job_id)}>
-          {item?.job_title}
-        </Text>
+      {/* Salary & badges */}
+      <Text style={styles.salary}>
+      {parseInt(item?.salary)} {item?.currency}-ден, қолға берілетіні
+      </Text>
 
-        <View style={styles.infoWrapper}>
-          <Text style={styles.info1(selectedJob, item.job_id)}>
-            <Text>Employer type - </Text>
-          </Text>
-          <Text style={styles.info2}><Text>{item?.job_employment_type}</Text></Text>
-        </View>
-        <View style={styles.infoWrapper}>
-          <Text style={styles.info1(selectedJob, item.job_id)}>
-            <Text>{item?.job_publisher} - </Text>
-          </Text>
-          <Text style={styles.info2}><Text>{item?.job_country}</Text></Text>
-        </View>
+      <View style={styles.badgeRow}>
+        {item?.jdata.map((badge) => (
+          <Text key={badge} style={styles.badge}>{badge}</Text>
+        ))}
       </View>
+
+      {/* Company and location */}
+      <Text style={styles.company}>{item?.company}</Text>
+      <Text style={styles.location}>{item?.location}</Text>
     </TouchableOpacity>
   );
 }
-
 const styles = StyleSheet.create({
-  container: (selectedJob, job_id) => ({
+  card: (selectedJob, id) => ({
     width: "100%",
-    marginTop: SIZES.medium,
-    padding: SIZES.xLarge,
-    backgroundColor: selectedJob === job_id ? COLORS.secondary : COLORS.white,
+    backgroundColor: COLORS.white,
     borderRadius: SIZES.medium,
+    padding: SIZES.medium,
+    marginBottom: SIZES.medium,
     ...SHADOWS.medium,
-    shadowColor: COLORS.white,
+    shadowColor: COLORS.gray,
   }),
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  title: {
+    fontSize: SIZES.large,
+    fontFamily: FONTS.bold,
+    color: COLORS.secondary,
+    flexShrink: 1,
+  },
+  iconRow: {
+    flexDirection: "row",
+    gap: SIZES.xSmall,
+  },
+  icon: {
+    width: 20,
+    height: 20,
+    tintColor: COLORS.gray,
+  },
+  salary: {
+    fontSize: SIZES.medium,
+    fontFamily: FONTS.medium,
+    color: COLORS.primary,
+    marginTop: SIZES.small,
+  },
+  badgeRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginTop: SIZES.xSmall,
+    gap: SIZES.xSmall,
+
+  },
+  badge: {
+    backgroundColor: COLORS.tertiary,
+    color: COLORS.white,
+    fontSize: SIZES.medium,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+    fontWeight: 'bold'
+  },
+  company: {
+    marginTop: SIZES.small,
+    color: COLORS.secondary,
+    fontFamily: FONTS.medium,
+  },
+  location: {
+    color: COLORS.gray,
+    fontFamily: FONTS.regular,
+    marginBottom: SIZES.medium,
+  },
+  buttonRow: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    gap: SIZES.small,
+    marginTop: SIZES.small,
+  },
+  primaryButton: {
+    backgroundColor: COLORS.primary,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: SIZES.small,
+  },
+  primaryText: {
+    color: COLORS.white,
+    fontFamily: FONTS.medium,
+  },
+  secondaryButton: {
+    backgroundColor: COLORS.lightGray,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: SIZES.small,
+  },
+  secondaryText: {
+    color: COLORS.gray,
+    fontFamily: FONTS.medium,
+  },
   employerLogo: {
     width: 50,
     height: 50,
   },
   employerWrapper: {
-    justifyContent: "space-between",
-    flexDirection: "row",
-  },
-  heartIcon: (selectedJob, job_id) => ({
-    width: 20,
-    height: 20,
-    tintColor: selectedJob === job_id ? COLORS.white : COLORS.primary,
-  }),
-  employerHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: SIZES.xSmall,
-  },
-  employerTitle: {
-    fontFamily: FONTS.medium,
-    fontSize: SIZES.medium,
-    color: COLORS.gray,
-  },
-  infoContainer: {
-    marginTop: SIZES.medium,
-  },
-  jobName: (selectedJob, job_id) => ({
-    fontSize: SIZES.large,
-    fontFamily: FONTS.bold,
-    color: selectedJob === job_id ? COLORS.white : COLORS.secondary,
-  }),
-  infoWrapper: {
-    flexDirection: "row",
-    marginTop: SIZES.small / 2,
-    justifyContent: "flex-start",
-    alignItems: "center",
-  },
-  info1: (selectedJob, job_id) => ({
-    fontSize: SIZES.medium,
-    fontFamily: FONTS.medium,
-    color: selectedJob === job_id ? COLORS.gray2 : COLORS.primary,
-  }),
-  info2: {
-    fontSize: SIZES.medium,
-    fontFamily: FONTS.regular,
-    color: COLORS.gray,
-  },
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SIZES.xSmall
+  }
 });

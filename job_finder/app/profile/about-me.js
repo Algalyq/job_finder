@@ -7,6 +7,8 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage'; 
 import { useRouter } from 'expo-router';
 import { API_BASE_URL } from '../../constants/config'
+import { KeyboardAvoidingView, Platform, ScrollView, Keyboard } from 'react-native';
+import { TouchableWithoutFeedback } from 'react-native';
 
 const AboutMe = () => {
     const router = useRouter();
@@ -65,30 +67,45 @@ const AboutMe = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.backButton}> 
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Icon name="arrow-back" size={24} color="#130160" />
-                </TouchableOpacity>
-            </View>
+         
+         <KeyboardAvoidingView
+  behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+  style={{ flex: 1 }}
+>
+  <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <View style={styles.backButton}> 
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Icon name="arrow-back" size={24} color="#130160" />
+          </TouchableOpacity>
 
-            <Text style={styles.header}>About me</Text>
+          <Text style={styles.header}>Мен туралы</Text>
+        </View>
 
-            <TextInput
-                style={styles.input}
-                placeholder="Tell me about you."
-                value={aboutMe}
-                onChangeText={setAboutMe}
-                multiline
-                editable={!isLoading}  // Disable editing while loading
-            />
+        
 
-            <TouchableOpacity 
-                style={styles.button} 
-                onPress={handleSave}
-                disabled={isLoading}  // Disable the button if loading
-            >
-                <Text style={styles.buttonText}>SAVE</Text>
-            </TouchableOpacity>
+        <TextInput
+          style={styles.input}
+          placeholder="Өзіңіз туралы ақпарат жазыңыз."
+          value={aboutMe}
+          onChangeText={setAboutMe}
+          multiline
+          editable={!isLoading}
+        />
+      </ScrollView>
+
+      <TouchableOpacity 
+        style={styles.button} 
+        onPress={handleSave}
+        disabled={isLoading}
+      >
+        <Text style={styles.buttonText}>Сақтау</Text>
+      </TouchableOpacity>
+    </SafeAreaView>
+  </TouchableWithoutFeedback>
+</KeyboardAvoidingView>
+
         </SafeAreaView>
     );
 };
@@ -96,7 +113,7 @@ const AboutMe = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 16,
+        padding: 8,
         backgroundColor: '#fff',
     },
     header: {
@@ -130,7 +147,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     backButton: {
-        gap: 16
+        gap: 16, 
+        flexDirection: 'row'
     },  
     buttonText: {
         color: '#FFF',

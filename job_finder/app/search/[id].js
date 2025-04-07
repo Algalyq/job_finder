@@ -15,36 +15,38 @@ import { HeaderBtn } from "../../components";
 import useRequest from "../../hook/useRequest";
 import JobCard from "../../components/cards/job-card";
 import axios from "axios";
+import { API_BASE_URL } from "../../constants/config";
 
 export default function Search() {
   const router = useRouter();
   const params = useGlobalSearchParams();
-
+  const jobTypesKz = {'Full-time':'full-time', 'Part-time':'hybrid', 'Freelance':'remote'};
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [page, setpage] = useState(1);
-
+  const job_type = jobTypesKz[params.id];
+  const show_type = {'remote': 'Қашықтықтан','hybrid':'Гибрид','full-time':'Толық'}
+  
   const handleSearch = async () => {
     setIsLoading(true);
     setData([]);
+  
     try {
+      
       const option = {
         method: "GET",
-        url: `https://jsearch.p.rapidapi.com/search`,
-        headers: {
-          "X-RapidAPI-Key":
-            "8e99652f73msh0d6b44b17e30ae3p165001jsna1eed97a1b9c",
-          "X-RapidAPI-Host": "jsearch.p.rapidapi.com",
-        },
+        url: `${API_BASE_URL}/api/jobsf/`,
         params: {
-          query: params.id,
-          page: page.toString(),
+          ...(job_type ? { job_type } : { search: params.id }),
+          // Add other filters if needed, like:
+          // min_salary: "100000",
+          // publish_time: "week",
         },
       };
-
+  
       const { data: res } = await axios.request(option);
-      setData(res.data);
+      setData(res.results.results);
     } catch (error) {
       setError(error);
       console.log(error);
@@ -52,6 +54,8 @@ export default function Search() {
       setIsLoading(false);
     }
   };
+  
+  
 
   const handlePagination = (direction) => {
     if (direction === "left" && page > 1) {
@@ -71,7 +75,7 @@ export default function Search() {
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.lightWhite }}>
       <Stack.Screen
         options={{
-          headerStyle: { backgroundColor: COLORS.lightWhite },
+          headerStyle: { backgroundColor: COLORS.tertiary },
           headerShadowVisible: false,
           headerTitle: "",
           headerLeft: () => (
@@ -89,16 +93,23 @@ export default function Search() {
         renderItem={({ item }) => (
           <JobCard
             item={item}
-            onPress={() => router.push(`/job-details/${item.job_id}`)}
+            onPress={() => router.push(`/job-details/${item.id}`)}
           />
         )}
-        keyExtractor={(item) => `search-job-${item.job_id}`}
+        keyExtractor={(item) => `search-job-${item.id}`}
         contentContainerStyle={{ padding: SIZES.medium, rowGap: SIZES.medium }}
         ListHeaderComponent={() => (
           <>
             <View style={styles.container}>
-              <Text style={styles.searchTitle}>{params.id}</Text>
+            <HeaderBtn
+                icon={icons.left}
+                dimensions={24}
+                onPress={() => router.back()}
+              />
+              <View>
+              <Text style={styles.searchTitle}>{show_type[job_type] ? show_type[job_type] : params.id}</Text>
               <Text style={styles.noOfSearchedJobs}>Жұмыс мүмкіндіктері</Text>
+              </View>
             </View>
             <View style={styles.loaderWrapper}>
               {isLoading ? (
@@ -146,6 +157,9 @@ export default function Search() {
 const styles = StyleSheet.create({
   container: {
     width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: SIZES.medium
   },
   searchTitle: {
     fontFamily: FONTS.bold,

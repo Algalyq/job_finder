@@ -8,10 +8,11 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from .models import *
 from django.utils.timesince import timesince
-
+from django.conf import settings
 
 class JobSerializer(serializers.ModelSerializer):
     relative_created_at = serializers.SerializerMethodField()
+    # logo = serializers.SerializerMethodField()
 
     class Meta:
         model = Job
@@ -32,6 +33,11 @@ class JobSerializer(serializers.ModelSerializer):
 
     def get_relative_created_at(self, obj):
         return f"{timesince(obj.created_at)} ago"
+    
+    # def get_logo(self,obj):
+    #     from django.conf import settings
+    #     if obj.logo:
+    #         return f"{settings.BASE_URL}{obj.logo.url}"
 
 class JobLimitedSerializer(serializers.ModelSerializer):
     logo = serializers.ImageField(use_url=True)  # Ensures logo is a full URL
@@ -55,26 +61,18 @@ class RecentJobSerializer(serializers.ModelSerializer):
         fields = ['id', 'job', 'viewed_at']
 
 class RegisterSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(
-        required=True, 
-        validators=[UniqueValidator(queryset=User.objects.all())]
-    )
-    full_name = serializers.CharField(required=True)
-    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
-
     class Meta:
         model = User
-        fields = ['email', 'full_name', 'password']
+        fields = ['email', 'password', 'first_name', 'last_name', 'username']
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
 
     def create(self, validated_data):
-        user = User.objects.create_user(
-            username=validated_data['email'],  # Using email as username
-            email=validated_data['email'],
-            password=validated_data['password']
-        )
-        user.first_name = validated_data['full_name']
-        user.save()
+        user = User.objects.create_user(**validated_data)
+        Profile.objects.create(user=user)
         return user
+
 
 
 class CustomTokenObtainPairSerializer(serializers.Serializer):
@@ -100,6 +98,55 @@ class CustomTokenObtainPairSerializer(serializers.Serializer):
             'refresh': str(refresh),
         }
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'first_name', 'last_name']  # Add fields you want to update
+
+
+class ProfileSerializeEdit(serializers.ModelSerializer):
+    user = UserSerializer()
+
+    class Meta:
+        model = Profile
+        fields = ['user', 'job_title', 'avatar']
+
+    def to_internal_value(self, data):
+        # Handle the QueryDict format (e.g., 'user[username]', 'user[email]')
+        internal_data = {}
+        user_data = {}
+
+        for key, value in data.items():
+            if key.startswith('user[') and key.endswith(']'):
+                # Extract the field name from 'user[field]'
+                field = key[5:-1]  # Remove 'user[' and ']'
+                user_data[field] = value[0] if isinstance(value, list) else value
+            else:
+                internal_data[key] = value[0] if isinstance(value, list) else value
+
+        if user_data:
+            internal_data['user'] = user_data
+        return internal_data
+
+    def update(self, instance, validated_data):
+        user_data = validated_data.pop('user', {})
+        user = instance.user
+
+        # Update User fields
+        user_serializer = UserSerializer(user, data=user_data, partial=True)
+        if user_serializer.is_valid():
+            user_serializer.save()
+        else:
+            raise serializers.ValidationError(user_serializer.errors)
+
+        # Update Profile fields
+        instance.job_title = validated_data.get('job_title', instance.job_title)
+        # Handle avatar if present (assuming it's a file field)
+        if 'avatar' in validated_data:
+            instance.avatar = validated_data['avatar']
+
+        instance.save()
+        return instance
 
 class WorkExperienceSerializer(serializers.ModelSerializer):
     duration = serializers.SerializerMethodField()
@@ -164,17 +211,28 @@ class ProfileSerializer(serializers.ModelSerializer):
     work_experiences = WorkExperienceSerializer(many=True, read_only=True)
     educations = EducationSerializer(many=True, read_only=True)
     full_name = serializers.CharField(source='get_full_name', read_only=True)
-    avatar = serializers.SerializerMethodField()
+    # avatar = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
         fields = ['user', 'full_name', 'avatar', 'job_title', 'about_me', 'skills', 'work_experiences', 'educations', 'resume']
 
-    def get_avatar(self, obj):
-        from django.conf import settings
-        if obj.avatar:
-            return f"{settings.BASE_URL}{obj.avatar.url}"
-
+    # def get_avatar(self, obj):
+    #     request = self.context.get('request')
+    #     if obj.avatar:
+    #         # Check if `request` exists to build the full URL
+    #         if request:
+    #             return request.build_absolute_uri(obj.avatar.url)
+    #         # Fallback if `request` is not available
+    #         return self.get_avatar_url(obj)
+    #     return None
+    
+    # def get_avatar(self, obj):
+    #     # Fallback to BASE_URL if request is not available
+    #     BASE_URL = f'{settings.BASE_URL}'  # Ensure you use the correct base URL
+    #     if obj.avatar:
+    #         return f"{BASE_URL}{obj.avatar.url}"
+    #     return None
 
 class SkillsSerializer(serializers.Serializer):
     skills = serializers.ListField(child=serializers.CharField())

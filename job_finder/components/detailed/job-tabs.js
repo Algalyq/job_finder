@@ -45,8 +45,9 @@ const styles = StyleSheet.create({
     shadowColor: COLORS.white,
   }),
   tabText: (activeTab, item) => ({
-    fontSize: SIZES.small,
+    fontSize: SIZES.medium,
+    fontWeight: 'bold',
     color: item === activeTab ? COLORS.white : COLORS.primary,
-    fontFamily: FONTS.medium,
+    fontFamily: FONTS.bold,
   }),
 });

@@ -53,14 +53,14 @@ export const isAuthenticated = async () => {
 };
 
 // Login function
-export const login = async (email, password) => {
+export const login = async (username, password) => {
   try {
     const response = await fetch(`${BASE_URL}/login/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify({ username, password })
     });
 
     const data = await response.json();
@@ -86,6 +86,50 @@ export const login = async (email, password) => {
     return {
       success: false,
       error: error.message || 'An error occurred during login'
+    };
+  }
+};
+
+// Register function
+export const register = async (username,email, first_name, last_name, password) => {
+  try {
+    const response = await fetch(`${BASE_URL}/register/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username: username,
+        password: password,
+        email: email,
+        first_name: first_name,
+        last_name: last_name
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || data.detail || 'Registration failed');
+    }
+
+    if (!data.access || !data.refresh) {
+      throw new Error('Invalid registration response');
+    }
+
+    // Store both tokens
+    const success = await setAuthTokens(data.access, data.refresh);
+    if (!success) {
+      throw new Error('Failed to store authentication tokens');
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('Registration error:', error);
+    await clearAuthTokens(); // Clean up any partial tokens
+    return {
+      success: false,
+      error: error.message || 'An error occurred during registration'
     };
   }
 };

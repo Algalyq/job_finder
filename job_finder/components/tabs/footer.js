@@ -23,7 +23,6 @@ export default function Footer({ url, data }) {
       try {
         const token = await AsyncStorage.getItem("access");
         setAccessToken(token);
-
         if (token && data && data.length > 0) {
           await checkIfSaved(token);
         }
@@ -45,9 +44,9 @@ export default function Footer({ url, data }) {
 
       const savedJobs = response.data.jobs || response.data;
       const currentJob = {
-        title: data[0].job_title,
-        company: data[0].employer_name,
-        logo: data[0].employer_logo,
+        title: data.title,
+        company: data.company,
+        logo: data.logo,
       };
 
       const isSaved = savedJobs.some(
@@ -65,15 +64,15 @@ export default function Footer({ url, data }) {
   const saveJob = async () => {
     if (!data || data.length === 0) return;
 
-    const logo = data[0].employer_logo;
+    const logo = data.logo;
     try {
       const response = await axios.post(
         `${API_BASE_URL}/api/new-saved-jobs/`,
         {
-          id: data[0].job_id,
-          job_id: data[0].job_id,
-          title: data[0].job_title,
-          company: data[0].employer_name,
+          id: data.id,
+          job_id: data.id,
+          title: data.title,
+          company: data.company,
           logo: logo,
         },
         {
@@ -119,7 +118,7 @@ export default function Footer({ url, data }) {
         style={[styles.heartBtn, { backgroundColor: isBookmarked ? COLORS.tertiary : "transparent" }]}
         onPress={() => {
           if (isBookmarked) {
-              deleteJob(data[0].job_id);
+              deleteJob(data.id);
               setIsBookmarked(false);
           } else {
               saveJob();

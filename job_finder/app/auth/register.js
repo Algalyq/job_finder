@@ -9,8 +9,9 @@ import { images } from '../../constants';
 
 const Register = () => {
     const router = useRouter();
-    const { login } = useAuth();
+    const { login,register } = useAuth();
     const [formData, setFormData] = useState({
+        username: '',
         email: '',
         password: '',
         confirmPassword: '',
@@ -46,6 +47,7 @@ const Register = () => {
         try {
             setLoading(true);
             const { success, error } = await register({
+                username: formData.username,
                 email: formData.email,
                 password: formData.password,
                 first_name: formData.firstName,
@@ -54,7 +56,7 @@ const Register = () => {
             
             if (success) {
                 // After successful registration, automatically log in
-                const loginResult = await login(formData.email, formData.password);
+                const loginResult = await login(formData.username, formData.password);
                 if (loginResult.success) {
                     router.replace('/');
                 } else {
@@ -80,9 +82,15 @@ const Register = () => {
                 /> */}
             </View>
 
-            <Text style={styles.title}>Тіркелгі жасау</Text>
+            <Text style={styles.title}>Тіркелу</Text>
             
             <View style={styles.inputContainer}>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Логин"
+                    value={formData.username}
+                    onChangeText={(value) => handleChange('username', value)}
+                />
                 <TextInput
                     style={styles.input}
                     placeholder="Аты"

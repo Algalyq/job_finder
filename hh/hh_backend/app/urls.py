@@ -1,7 +1,7 @@
 # yourapp/urls.py
 from django.urls import path
 from .views import (register, CustomTokenObtainPairView, ResumeUploadView, JobListView,
-    NewSaveJobView, NewSaveJobDetailView, MessageChannelListView, MessageListView,
+    NewSaveJobView, NewSaveJobDetailView, MessageChannelListView, MessageListView,JobDetailView,UpdateProfileView,
     MessageChannelDetailView)
 from . import views
 
@@ -9,6 +9,8 @@ urlpatterns = [
     path('register/', register, name='register'),
     path('login/', CustomTokenObtainPairView.as_view(), name='login'),
     path('jobs/', views.job_list, name='job-list'),
+    path('update-profile/', UpdateProfileView.as_view(), name='update_profile'),
+    path('jobs/<int:id>/', JobDetailView.as_view(), name='job-detail'),
     path('jobs/create/', views.job_create, name='job-create'),
     path('saved-jobs/', views.SavedJobView.as_view(), name='saved-jobs'),
     path('recent-jobs/', views.RecentJobView.as_view(), name='recent-jobs'),

@@ -40,7 +40,7 @@ const LayoutInner = () => {
       router.replace('/auth/login');
     } else if (isLoggedIn && inAuthGroup) {
       console.log('Authenticated user accessing auth route, redirecting...');
-      router.replace('/');
+      // router.replace('/');
     }
   }, [isLoggedIn, segments, router]);
 

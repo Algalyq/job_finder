@@ -6,17 +6,14 @@ import {
   FlatList,
 } from "react-native";
 import React, { useState } from "react";
-import useRequest from "../../hook/useRequest";
+import useJobsRequest from "../../hook/useJobsRequest";
 import { COLORS, FONTS, SIZES } from "../../constants";
 import MyJobCard from "../cards/my-job-card";
 
 export default function MyJobs() {
   const [selectedJob, setSelectedJob] = useState(null);
-
-  const { data, isLoading, error } = useRequest("search", {
-    query: "React native",
-    page: "1",
-  });
+  
+  const { data, isLoading, error } = useJobsRequest();
 
   return (
     <View style={styles.container}>

@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { isAuthenticated, login as authLogin, logout as authLogout } from '../utils/auth';
+import { isAuthenticated, login as authLogin, logout as authLogout, register as AuthRegister} from '../utils/auth';
 
 const AuthContext = createContext(null);
 
@@ -23,15 +23,28 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const login = async (email, password) => {
+  const login = async (username, password) => {
     try {
-      const result = await authLogin(email, password);
+      const result = await authLogin(username, password);
       if (result.success) {
         setIsLoggedIn(true);
       }
       return result;
     } catch (error) {
       console.error('Login error:', error);
+      return { success: false, error: error.message };
+    }
+  };
+
+  const register = async (username,email, first_name, last_name, password) => {
+    try {
+      const result = await AuthRegister(username,email, first_name, last_name, password);
+      if (result.success) {
+        setIsLoggedIn(true);
+      }
+      return result;
+    } catch (error) {
+      console.error('Registration error:', error);
       return { success: false, error: error.message };
     }
   };
@@ -52,7 +65,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout, checkAuthStatus }}>
+    <AuthContext.Provider value={{ isLoggedIn, login, logout, checkAuthStatus, register }}>
       {children}
     </AuthContext.Provider>
   );

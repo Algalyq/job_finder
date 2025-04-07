@@ -8,7 +8,7 @@ import styles from '../../styles/auth';
 
 const Login = () => {
     const router = useRouter();
-    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -16,7 +16,7 @@ const Login = () => {
     const { login } = useAuth();
 
     const handleLogin = async () => {
-      if (!email || !password) {
+      if (!username || !password) {
         setError('Барлық өрістерді толтырыңыз');
         return;
       }
@@ -24,7 +24,7 @@ const Login = () => {
       try {
         setLoading(true);
         setError('');
-        const result = await login(email, password);
+        const result = await login(username, password);
         
         if (result.success) {
           console.log('Login successful, navigating...');
@@ -59,10 +59,9 @@ const Login = () => {
             <View style={styles.inputContainer}>
                 <TextInput
                     style={styles.input}
-                    placeholder="Электрондық пошта"
-                    value={email}
-                    onChangeText={setEmail}
-                    keyboardType="email-address"
+                    placeholder="Логин"
+                    value={username}
+                    onChangeText={setUsername}
                     autoCapitalize="none"
                 />
                 <TextInput

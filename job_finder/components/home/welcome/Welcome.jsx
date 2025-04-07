@@ -5,12 +5,11 @@ import styles from './welcome.style';
 import { icons, SIZES } from '../../../constants';
 import  useFetchProfile  from '../../../hook/useFetchProfile';
 const jobTypes = ['Толық жұмыс күні', 'Жарты жұмыс күні', 'Келісімшарт'];
-
+const jobTypesEn = {'Толық жұмыс күні':'Full-time', 'Жарты жұмыс күні':'Part-time', 'Келісімшарт':'Freelance'};
 const Welcome = ({searchTerm,setSearchTerm,handleClick}) => {
   const router = useRouter();
   
   const { profile } = useFetchProfile(); 
-  console.log(profile)
   const [activeJobType, setActiveJobType] = useState('Толық жұмыс күні');
   const [fullName, setFullName] = useState('Құрметті қонақ');
 
@@ -41,11 +40,11 @@ const Welcome = ({searchTerm,setSearchTerm,handleClick}) => {
         <FlatList data={jobTypes}
           renderItem={({ item }) => (
             <TouchableOpacity style={styles.tab(activeJobType, item)}
-            onPress={()=>{
-              setActiveJobType(item);
-              router.push(`/search/${item}`)
-            }}
-            >
+              onPress={()=>{
+                setActiveJobType(item);
+                router.push(`/search/${jobTypesEn[item]}`)
+              }}
+              >
               <Text style={styles.tabText(activeJobType, item)}>{item}</Text>
             </TouchableOpacity>
           )} 

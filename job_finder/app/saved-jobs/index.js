@@ -16,10 +16,11 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ProfileSections, Navbar } from "../../components"
 import HeaderBtn from "../../components/shared/header-btn";
-import { icons } from "../../constants";
+import { COLORS, icons } from "../../constants";
 import axios from "axios";
 import { Stack, useRouter } from "expo-router";
 import { API_BASE_URL } from '../../constants/config'
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 const SavedJobs = () => {
   const [jobsData, setJobsData] = useState([]);
@@ -101,7 +102,6 @@ const SavedJobs = () => {
         console.error('Job not found');
         return;
       }
-      console.log(job)
       // Create message channel
       const response = await fetch(`${API_BASE_URL}/api/messages/channels/`, {
         method: 'POST',
@@ -128,31 +128,60 @@ const SavedJobs = () => {
     }
   };
 
+  const toggleSaveJob = async (jobId) => {
+    const isSaved = jobsData.some(job => job.id === jobId);
+  
+    try {
+      if (isSaved) {
+        // Delete saved job
+        const response = await axios.delete(
+          `${API_BASE_URL}/api/new-saved-jobs/${jobId}/`,
+          {
+            headers: {
+              "Authorization": `Bearer ${accessToken}`,
+            }
+          }
+        );
+  
+        if (response.status === 204) {
+          setJobsData(prev => prev.filter(job => job.id !== jobId));
+          setCountSavedJobs(prev => prev - 1);
+          setIsBookmarked(false);
+        }
+      } else {
+        // Save the job again
+        const response = await axios.post(
+          `${API_BASE_URL}/api/new-saved-jobs/`,
+          { job_id: jobId },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${accessToken}`,
+            }
+          }
+        );
+  
+        if (response.status === 201 || response.status === 200) {
+          const newJob = response.data;
+          setJobsData(prev => [...prev, newJob]);
+          setCountSavedJobs(prev => prev + 1);
+          setIsBookmarked(true)
+        }
+      }
+  
+      closeModal();
+    } catch (err) {
+      console.error("Error saving/deleting job:", err.response?.data || err.message);
+    }
+  };
+
+  
   const navigateToPage = (item) => {
     router.push(`/job-details/${item.id}`)
     closeModal();
   };
   const [accessToken, setAccessToken] = useState(null);
-  const deleteJob = async (jobId) => {
-    try {
-      console.log('Deleting job with ID:', jobId);
-      const response = await axios.delete(
-        `${API_BASE_URL}/api/new-saved-jobs/${jobId}/`,
-        {
-          headers: {
-            "Authorization": `Bearer ${accessToken}`,
-          }
-        }
-      );
-
-      if (response.status === 204) {
-        console.log("Job deleted successfully");
-      }
-    } catch (err) {
-      console.error("Error deleting job:", err.response?.data || err.message);
-    }
-  };
-
+  
   const renderJobItem = ({ item }) => (
     <TouchableOpacity style={styles.card} onPress={() => navigateToPage(item)}>
       <View style={styles.cardHeader}>
@@ -185,16 +214,25 @@ const SavedJobs = () => {
               style={styles.option}
               onPress={() => createNavigateToMessage(item.id)}
             >
-              <Feather name="send" size={24} color="#333" />
+              <Feather name="send" size={24} color={COLORS.tertiary} />
               <Text style={styles.optionText}>Хабарлама</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.option}
-              onPress={() => deleteJob(item.id)}
+              onPress={() => toggleSaveJob(item.id)}
             >
-              <Icon name="heart" size={24} color="#333" />
-              <Text style={styles.optionText}>Сақтаудан алып тастау</Text>
-            </TouchableOpacity>
+             <Ionicons
+              name={jobsData.some(job => job.id === item.id) ? "heart" : "heart-outline"}
+              size={24}
+              color={COLORS.tertiary}
+            />
+            <Text style={styles.optionText}>
+              {jobsData.some(job => job.id === item.id)
+                ? "Сақтаудан алып тастау"
+                : "Қайта сақтау"}
+            </Text>
+
+             </TouchableOpacity>
           </View>
         </View>
       </Modal>

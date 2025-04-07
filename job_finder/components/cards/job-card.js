@@ -1,24 +1,26 @@
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import React from "react";
-import { SIZES, SHADOWS, COLORS, FONTS } from "../../constants";
+import { SIZES, SHADOWS, COLORS, FONTS, icons } from "../../constants";
 
 export default function JobCard({ item, onPress }) {
+  
   return (
     <TouchableOpacity onPress={onPress} style={styles.container}>
       <TouchableOpacity style={styles.imgWrapper}>
         <Image
           source={{
-            uri: item?.employer_logo
-              ? item.employer_logo
+            uri: item?.logo
+              ? item.logo
               : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQO0-uMT750aKUESYouIjtAZkT13UALJtvxz2V1&s=0",
           }}
           style={styles.logoImage}
         />
+   
       </TouchableOpacity>
 
       <View style={styles.textWrapper}>
-        <Text style={styles.jobName}>{item?.job_title}</Text>
-        <Text style={styles.jobType}>{item?.job_employment_type}</Text>
+        <Text style={styles.jobName}>{item?.title}</Text>
+        <Text style={styles.jobType}>{item?.company} - {item?.job_type}</Text>
       </View>
     </TouchableOpacity>
   );

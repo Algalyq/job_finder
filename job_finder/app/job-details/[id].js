@@ -11,7 +11,7 @@ import React, { useCallback, useState, useEffect } from "react";
 import { COLORS, SIZES, icons, tabs } from "../../constants";
 import { Stack, useGlobalSearchParams, useRouter } from "expo-router";
 import HeaderBtn from "../../components/shared/header-btn";
-import useRequest from "../../hook/useRequest";
+import useRequest from "../../hook/useJobDetailRequest";
 import { About, Footer, Job, JobTabs, Qualification, Responsibility } from "../../components";
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -23,9 +23,10 @@ export default function Details() {
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const [refreshing, setRefreshing] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false); // Track saved state
-  const { data, isLoading, error, refetch } = useRequest("job-details", {
+  const { data, isLoading, error, refetch } = useRequest("api/jobs", {
     job_id: params.id,
   });
+  console.log(data)
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     refetch();
@@ -34,21 +35,15 @@ export default function Details() {
 
 
   // export const tabs = ["Жайлы", "Біліктілік", "Міндеттер"];
+  console.log(data)
   const renderTabContent = () => {
     switch (activeTab) {
-      case "Жайлы":
-        return <About info={data[0].job_description ?? "No data provided"} />;
-      case "Біліктілік":
-        return (
-          <Qualification
-            info={data[0].job_highlights?.Qualifications ?? ["N/A"]}
-          />
-        );
+      case "Ақпарат":
+        return <About info={`Компания аты: ${data.company}, қызметкер іздеуде: ${data.title} осы қызметке іздеген компанияға ақпарат бер`} />;
       case "Міндеттер":
         return (
           <Responsibility
-            info={data[0].job_highlights?.Responsibilities ?? ["N/A"]}
-          />
+          info={`Компания аты: ${data.company}, қызметкер іздеуде: ${data.title} осы қызмет атқаратын қызметкердің  компаниядағы міндеттерін жаз`} />
         );
       default:
         return null;
@@ -69,10 +64,6 @@ export default function Details() {
         dimensions={24}
         onPress={() => router.back()}
       />
-      <HeaderBtn
-        icon={icons.share}
-        dimensions={24}
-      />
     </View>
       <>
         <ScrollView
@@ -90,10 +81,10 @@ export default function Details() {
           ) : (
             <View style={{ padding: SIZES.medium, paddingBottom: SIZES.large }}>
               <Job
-                companyLogo={data[0].employer_logo}
-                jobTitle={data[0].job_title}
-                companyName={data[0].employer_name}
-                location={data[0].job_country}
+                companyLogo={data.logo ? data.logo : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQO0-uMT750aKUESYouIjtAZkT13UALJtvxz2V1&s=0"}
+                jobTitle={data.title}
+                companyName={data.company}
+                location={data.location}
               />
               <JobTabs activeTab={activeTab} setActiveTab={setActiveTab} />
               <View style={{ marginBottom: 30 }}>{renderTabContent()}</View>

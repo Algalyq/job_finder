@@ -9,4 +9,4 @@ export const filterJobTypes = [
   "Фрилансер",
 ];
 
-export const tabs = ["Жайлы", "Біліктілік", "Міндеттер"];
+export const tabs = ["Ақпарат" ,"Міндеттер"];

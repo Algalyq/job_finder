@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import {  COLORS } from '../constants';
 
 const styles = StyleSheet.create({
   container: {
@@ -9,6 +10,10 @@ const styles = StyleSheet.create({
     padding: 16,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  headerBody: {
+    flexDirection: 'row'
   },
   title: {
     fontSize: 16,
@@ -58,6 +63,40 @@ const styles = StyleSheet.create({
     color: '#000',
     height: '120%',
   },
+  headerButtons: {
+  },
+  modalBackground: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Transparent black background
+  },
+  modalContainer: {
+    backgroundColor: COLORS.white,
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  modalButton: {
+    padding: 10,
+    marginBottom: 10,
+    backgroundColor: COLORS.primary,
+    width: '100%',
+    borderRadius: 5,
+  },
+  modalButtonText: {
+    color: COLORS.white,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  
+
 });
 
 export default styles;

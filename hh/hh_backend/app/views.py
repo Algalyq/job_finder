@@ -15,8 +15,11 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.filters import SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView,RetrieveAPIView
 from datetime import timedelta
+
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
 from django_filters import rest_framework as filters
 
 from django.utils import timezone
@@ -33,6 +36,13 @@ class JobNameFilter(filters.FilterSet):
     class Meta:
         model = Job
         fields = ['title']
+
+
+class JobDetailView(RetrieveAPIView):
+    queryset = Job.objects.all()
+    serializer_class = JobSerializer
+    lookup_field = 'id'  # or 'pk' if you prefer
+
 
 class JobListView(ListAPIView):
     queryset = Job.objects.all()
@@ -173,11 +183,52 @@ def job_create(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+class UpdateProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request):
+        try:
+            user = request.user
+            profile = Profile.objects.get(user=user)
+        except Profile.DoesNotExist:
+            return Response({"detail": "Profile not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        print("Received Data:", request.data)  # Debug what data is coming in
+        serializer = ProfileSerializeEdit(profile, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def get(self,request):
+        user = request.user 
+        try:
+            profile = Profile.objects.get(user=user)
+            serializer = ProfileSerializeEdit(profile)
+            return Response({"data": serializer.data})
+        except Profile.DoesNotExist:
+            return Response({"error": "Profile not found"}, status=status.HTTP_404_NOT_FOUND)
+    def patch(self, request, *args, **kwargs):
+        user = request.user
+        try:
+            profile = Profile.objects.get(user=user)
+        except Profile.DoesNotExist:
+            return Response({"error": "Profile not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = ProfileSerializeEdit(profile, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "Profile updated successfully", "data": serializer.data}, status=status.HTTP_200_OK)
+        return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def register(request):
+
     if request.method == 'POST':
-        serializer = RegisterSerializer(data=request.data)
+        # request.data.get('email')['username'] = request.data.get('email')['first_name']
+        print(request.data)
+        serializer = RegisterSerializer(data=request.data.get('username'))
         if serializer.is_valid():
             user = serializer.save()
             refresh = RefreshToken.for_user(user)
@@ -187,7 +238,19 @@ def register(request):
                 'access': access_token,
                 'refresh': str(refresh),
             }, status=status.HTTP_201_CREATED)
+
+        print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        print("Login attempt with:", attrs)  # Show email/username & password
+
+        data = super().validate(attrs)
+
+        print("Token issued:", data)
+        return data
+
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer

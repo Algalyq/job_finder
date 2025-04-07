@@ -1,7 +1,11 @@
 
 from pathlib import Path
 from datetime import timedelta
+import socket
 
+# Automatically get local IP address
+hostname = socket.gethostname()
+local_ip = socket.gethostbyname(hostname)
 
 import os
 
@@ -14,7 +18,7 @@ SECRET_KEY = 'django-insecure-%x6@l@n(!5^x$7o_j#m()tl)n(*%*pubjrre^xb96mr-qu&u_6
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -26,10 +30,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',  # Add Django REST Framework
-    'rest_framework_simplejwt',  # Add Simple JWT
-    'app',  # Replace with your app name
+    'rest_framework',
+    'rest_framework_simplejwt',  
+    'app',  
     'corsheaders',
+    'django_filters',
 ]
 
 
@@ -57,8 +62,8 @@ CORS_ALLOW_ALL_ORIGINS = True
 ALLOWED_HOSTS = ['*']
 
 # Base URL for building absolute URIs
-BASE_URL = 'http://0.0.0.0:8000'  # Change this in production to your actual domain
 
+BASE_URL = f'http://172.20.6.84:8000'
 
 TEMPLATES = [
     {

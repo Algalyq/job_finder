@@ -1,21 +1,26 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import React, { useState, useEffect } from "react";
 import { COLORS, FONTS, SIZES } from "../../constants";
 import { make_request } from "../../constants/useGemini";
 
 export default function About({ info }) {
-  const [translatedInfo, setTranslatedInfo] = useState(info);
+  const [translatedInfo, setTranslatedInfo] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const translateText = async () => {
       try {
-        const prompt = `Translate this job description to Kazakh, dont write comments: ${info}`;
+        setLoading(true);
+        const prompt = `Now will be text on kazakh language, answer on kazakh language: ${info}`;
         const response = await make_request(prompt);
         if (response) {
           setTranslatedInfo(response);
         }
       } catch (error) {
         console.error('Translation error:', error);
+        setTranslatedInfo("Аудару кезінде қате орын алды.");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -27,7 +32,11 @@ export default function About({ info }) {
       <Text style={styles.title}>Бұл жұмыс туралы ақпарат:</Text>
 
       <View style={styles.contentBox}>
-        <Text style={styles.contentText}>{translatedInfo}</Text>
+        {loading ? (
+          <Text style={styles.loadingText}>Жүктелуде...</Text>
+        ) : (
+          <Text style={styles.contentText}>{translatedInfo}</Text>
+        )}
       </View>
     </View>
   );
@@ -49,8 +58,14 @@ const styles = StyleSheet.create({
     marginTop: SIZES.medium,
   },
   contentText: {
-    fontSize: SIZES.small,
+    fontSize: SIZES.medium,
     color: COLORS.secondary,
     fontFamily: FONTS.regular,
+  },
+  loadingText: {
+    fontSize: SIZES.medium,
+    color: COLORS.gray,
+    fontFamily: FONTS.medium,
+    fontStyle: "italic",
   },
 });
