@@ -1,0 +1,20 @@
+diff --git a/build/LoadingView.native.js b/build/LoadingView.native.js
+index e492d19..eab408c 100644
+--- a/build/LoadingView.native.js
++++ b/build/LoadingView.native.js
+@@ -2,7 +2,13 @@
+ var __importDefault = (this && this.__importDefault) || function (mod) {
+     return (mod && mod.__esModule) ? mod : { "default": mod };
+ };
+-let LoadingView;
++const reactNativeVersion = require('react-native/package.json').version;
++let LoadingView = null;
++let moduleName = parseInt(reactNativeVersion.split('.')[1]) >= 75 
++    ? 'react-native/Libraries/Utilities/DevLoadingView' 
++    : 'react-native/Libraries/Utilities/LoadingView';
++
+ try {
+-    LoadingView = require('react-native/Libraries/Utilities/LoadingView');
++    LoadingView = require(moduleName);
+ }
+ catch { }
